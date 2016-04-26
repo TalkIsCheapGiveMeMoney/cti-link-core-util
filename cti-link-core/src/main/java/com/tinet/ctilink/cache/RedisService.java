@@ -423,7 +423,7 @@ public class RedisService {
      * @param key
      * @return
      */
-    public Set<Object> hgetallField(int dbIndex, String key) {
+    public Set<Object> hgetallfield(int dbIndex, String key) {
         jedisConnectionFactory.setDatabase(dbIndex);
         return redisTemplate.opsForHash().keys(key);
     }
