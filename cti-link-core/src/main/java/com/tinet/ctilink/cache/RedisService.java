@@ -119,7 +119,21 @@ public class RedisService {
         redisTemplate.convertAndSend(channel, message);
         return true;
     }
-
+   
+   /**
+     * TIME
+     * Return the current server time
+     * @return
+     */
+    public Long time() {
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.time();
+            }
+        });
+    }
+    
     // ops for list
 
     /**
