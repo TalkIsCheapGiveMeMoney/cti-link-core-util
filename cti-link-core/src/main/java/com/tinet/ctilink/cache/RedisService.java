@@ -415,7 +415,19 @@ public class RedisService {
         jedisConnectionFactory.setDatabase(dbIndex);
         return redisTemplate.opsForHash().entries(key);
     }
-
+    
+    /**
+     * HGETALL key
+     * Get all the fields and values in a hash
+     * @param dbIndex
+     * @param key
+     * @return
+     */
+    public Set<Object> hgetallField(int dbIndex, String key) {
+        jedisConnectionFactory.setDatabase(dbIndex);
+        return redisTemplate.opsForHash().keys(key);
+    }
+    
     /**
      * HINCRBY key field increment
      * Increment the integer value of a hash field by the given number
