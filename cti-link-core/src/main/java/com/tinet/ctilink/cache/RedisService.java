@@ -54,7 +54,7 @@ public class RedisService {
         return true;
     }
 
-    public <T> Boolean set(String key, T t, int dbIndex) {
+    public <T> Boolean set(int dbIndex, String key, T t) {
         jedisConnectionFactory.setDatabase(dbIndex);
         boolean result = true;
         try {
@@ -69,7 +69,7 @@ public class RedisService {
     }
 
 
-    public <T> T get(String key, Class<T> clazz, int dbIndex) {
+    public <T> T get(int dbIndex, String key, Class<T> clazz) {
         jedisConnectionFactory.setDatabase(dbIndex);
         T t = null;
         try {
@@ -85,7 +85,7 @@ public class RedisService {
         return t;
     }
 
-    public <T> List<T> getList(String key, Class<T> clazz, int dbIndex) {
+    public <T> List<T> getList(int dbIndex, String key, Class<T> clazz) {
         jedisConnectionFactory.setDatabase(dbIndex);
         List<T> list = null;
         try {
@@ -103,31 +103,19 @@ public class RedisService {
         return list;
     }
 
-    public Boolean delete(String key, int dbIndex) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.delete(key);
-        return true;
-    }
-
-    public Boolean deleteByKeySet(Set<String> keySet, int dbIndex) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.delete(keySet);
-        return true;
-    }
-
-    public Set<String> keys(String pattern, int dbIndex) {
+    public Set<String> keys(int dbIndex, String pattern) {
         jedisConnectionFactory.setDatabase(dbIndex);
         return redisTemplate.keys(pattern);
     }
 
-    public Boolean incrby(String key, long delta, int dbIndex) {
+    public Boolean incrby(int dbIndex, String key, long delta) {
         jedisConnectionFactory.setDatabase(dbIndex);
         redisTemplate.opsForValue().increment(key, delta);
         return true;
     }
 
     //发布消息到Channel
-    public <T> Boolean convertAndSend(String channel, T message) {
+    public <T> Boolean convertAndSend(int dbIndex, String channel, T message) {
         redisTemplate.convertAndSend(channel, message);
         return true;
     }
@@ -427,7 +415,7 @@ public class RedisService {
         jedisConnectionFactory.setDatabase(dbIndex);
         return redisTemplate.opsForHash().keys(key);
     }
-    
+
     /**
      * HINCRBY key field increment
      * Increment the integer value of a hash field by the given number
