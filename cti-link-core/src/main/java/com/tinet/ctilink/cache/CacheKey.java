@@ -58,6 +58,7 @@ public class CacheKey {
      */
     public static final String ENTITY_ENTERPRISE_ID = "cti-link.entity.%d";
 
+    public static final String ENTITY_ENTERPRISE_ACTIVE = "cti-link.entity.active";
     /**
      * trunk  <10000
      */
