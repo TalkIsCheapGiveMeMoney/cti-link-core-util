@@ -3,14 +3,13 @@ package com.tinet.ctilink.cache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tinet.ctilink.jedis.CtiLinkJedisConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 
 import java.util.*;
@@ -20,59 +19,57 @@ import java.util.concurrent.TimeUnit;
  * @author fengwei //
  * @date 16/4/15 17:15
  */
-public class RedisService {
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private JedisConnectionFactory jedisConnectionFactory;
+public class RedisService extends StringRedisTemplate {
+
     private static final Logger logger = LoggerFactory.getLogger(RedisService.class);
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    private ThreadLocal<Integer> LOCAL_DB_INDEX = new ThreadLocal<>();
+
     public Boolean set(int dbIndex, String key, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForValue().set(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForValue().set(key, value);
         return true;
     }
 
     public String get(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForValue().get(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForValue().get(key);
     }
 
     public Boolean delete(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.delete(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        delete(key);
         return true;
     }
 
     public Boolean delete(int dbIndex, Set<String> keys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.delete(keys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        delete(keys);
         return true;
     }
 
     public <T> Boolean set(int dbIndex, String key, T t) {
-        jedisConnectionFactory.setDatabase(dbIndex);
         boolean result = true;
         try {
             String json = mapper.writeValueAsString(t);
-            redisTemplate.opsForValue().set(key, json);
+            LOCAL_DB_INDEX.set(dbIndex);
+            opsForValue().set(key, json);
         } catch (JsonProcessingException e) {
-            logger.error("CacheService.set error, key=" + key + " value=" + t, e);
+            logger.error("RedisService.set error, key=" + key + " value=" + t, e);
             result = false;
         }
 
         return result;
     }
 
-
     public <T> T get(int dbIndex, String key, Class<T> clazz) {
-        jedisConnectionFactory.setDatabase(dbIndex);
         T t = null;
         try {
-            String value = redisTemplate.opsForValue().get(key);
+            LOCAL_DB_INDEX.set(dbIndex);
+            String value = opsForValue().get(key);
             if (StringUtils.isEmpty(value)) {
                 return null;
             }
@@ -85,10 +82,10 @@ public class RedisService {
     }
 
     public <T> List<T> getList(int dbIndex, String key, Class<T> clazz) {
-        jedisConnectionFactory.setDatabase(dbIndex);
         List<T> list = null;
         try {
-            String value = redisTemplate.opsForValue().get(key);
+            LOCAL_DB_INDEX.set(dbIndex);
+            String value = opsForValue().get(key);
             if (StringUtils.isEmpty(value)) {
                 return null;
             }
@@ -103,106 +100,106 @@ public class RedisService {
     }
 
     public Set<String> keys(int dbIndex, String pattern) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.keys(pattern);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return keys(pattern);
     }
 
     public Boolean incrby(int dbIndex, String key, long delta) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForValue().increment(key, delta);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForValue().increment(key, delta);
         return true;
     }
 
     //发布消息到Channel
     public <T> Boolean convertAndSend(int dbIndex, String channel, T message) {
-        redisTemplate.convertAndSend(channel, message);
+        LOCAL_DB_INDEX.set(dbIndex);
+        convertAndSend(channel, message);
         return true;
     }
-   
-   /**
+
+    /**
      * TIME
      * Return the current server time
-     * @return
+     * @return 时间戳
      */
     public Long time() {
-        return redisTemplate.execute(new RedisCallback<Long>() {
+        return execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection connection) throws DataAccessException {
                 return connection.time();
             }
         });
     }
-    
-    // ops for list
 
+    // ops for list
     /**
      * LPOP key
-     Remove and get the first element in a list
-     * @param dbIndex
-     * @param key
-     * @return
+     * Remove and get the first element in a list
+     * @param dbIndex 数据库index
+     * @param key 键
+     * @return list中的第一个元素
      */
     public String lpop(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().leftPop(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().leftPop(key);
     }
 
     /**
      * BLPOP key [key ...] timeout
-     Remove and get the first element in a list, or block until one is available
-     * @param dbIndex
-     * @param key
-     * @param timeout
-     * @param timeUnit
-     * @return
+     * Remove and get the first element in a list, or block until one is available
+     * @param dbIndex 数据库index
+     * @param key 键
+     * @param timeout 超时时间
+     * @param timeUnit 时间单位
+     * @return list中的第一个元素
      */
     public String blpop(int dbIndex, String key, long timeout, TimeUnit timeUnit) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().leftPop(key, timeout, timeUnit);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().leftPop(key, timeout, timeUnit);
     }
 
     /**
      * RPOP key
-     Remove and get the last element in a list
-     * @param dbIndex
-     * @param key
-     * @return
+     * Remove and get the last element in a list
+     * @param dbIndex 数据库index
+     * @param key 键
+     * @return list中最后一个元素
      */
     public String rpop(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPop(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPop(key);
     }
 
     /**
      * BRPOP key [key ...] timeout
-     Remove and get the last element in a list, or block until one is available
-     * @param dbIndex
-     * @param key
-     * @param timeout
-     * @param timeUnit
-     * @return
+     * Remove and get the last element in a list, or block until one is available
+     * @param dbIndex 数据库index
+     * @param key 键
+     * @param timeout 超时时间
+     * @param timeUnit 时间单位
+     * @return list中最后一个元素
      */
     public String brpop(int dbIndex, String key, long timeout, TimeUnit timeUnit) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPop(key, timeout, timeUnit);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPop(key, timeout, timeUnit);
     }
 
     /**
      * RPOPLPUSH source destination
-     Remove the last element in a list, prepend it to another list and return it
+     * Remove the last element in a list, prepend it to another list and return it
      * @param dbIndex
      * @param sourceKey
      * @param destinationKey
      * @return
      */
     public String rpoplpush(int dbIndex, String sourceKey, String destinationKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPopAndLeftPush(sourceKey, destinationKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPopAndLeftPush(sourceKey, destinationKey);
     }
 
     /**
      * BRPOPLPUSH source destination timeout
-     Pop a value from a list, push it to another list and return it; or block until one is available
+     * Pop a value from a list, push it to another list and return it; or block until one is available
      * @param dbIndex
      * @param sourceKey
      * @param destinationKey
@@ -211,26 +208,26 @@ public class RedisService {
      * @return
      */
     public String brpoplpush(int dbIndex, String sourceKey, String destinationKey, long timeout, TimeUnit timeUnit) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPopAndLeftPush(sourceKey, destinationKey, timeout, timeUnit);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPopAndLeftPush(sourceKey, destinationKey, timeout, timeUnit);
     }
 
     /**
      * LINDEX key index
-     Get an element from a list by its index
+     * Get an element from a list by its index
      * @param dbIndex
      * @param key
      * @param index
      * @return
      */
     public String lindex(int dbIndex, String key, long index) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().index(key, index);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().index(key, index);
     }
 
     /**
      * LINSERT key BEFORE|AFTER pivot value
-     Insert an element before or after another element in a list
+     * Insert an element before or after another element in a list
      * @param dbIndex
      * @param key
      * @param pivot
@@ -238,51 +235,51 @@ public class RedisService {
      * @return
      */
     public Long linsert(int dbIndex, String key, String pivot, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().leftPush(key, pivot, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().leftPush(key, pivot, value);
     }
 
     /**
      * LLEN key
-     Get the length of a list
+     * Get the length of a list
      * @param dbIndex
      * @param key
      * @return
      */
     public Long llen(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().size(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().size(key);
     }
 
     /**
      * LPUSH key value [value ...]
-     Prepend one or multiple values to a list
+     * Prepend one or multiple values to a list
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long lpush(int dbIndex, String key, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().leftPush(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().leftPush(key, value);
     }
 
     /**
      * LPUSH key value [value ...]
-     Prepend one or multiple values to a list
+     * Prepend one or multiple values to a list
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long lpushx(int dbIndex, String key, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().leftPushIfPresent(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().leftPushIfPresent(key, value);
     }
 
     /**
      * LRANGE key start stop
-     Get a range of elements from a list
+     * Get a range of elements from a list
      * @param dbIndex
      * @param key
      * @param start
@@ -290,13 +287,13 @@ public class RedisService {
      * @return
      */
     public List<String> lrange(int dbIndex, String key, long start, long end) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().range(key, start, end);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().range(key, start, end);
     }
 
     /**
      * LREM key count value
-     Remove elements from a list
+     * Remove elements from a list
      * @param dbIndex
      * @param key
      * @param count
@@ -304,13 +301,13 @@ public class RedisService {
      * @return
      */
     public Long lrem(int dbIndex, String key, long count, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().remove(key, count, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().remove(key, count, value);
     }
 
     /**
      * LTRIM key start stop
-     Trim a list to the specified range
+     * Trim a list to the specified range
      * @param dbIndex
      * @param key
      * @param start
@@ -318,14 +315,14 @@ public class RedisService {
      * @return
      */
     public Boolean ltrim(int dbIndex, String key, long start, long end) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForList().trim(key, start, end);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForList().trim(key, start, end);
         return true;
     }
 
     /**
      * LSET key index value
-     Set the value of an element in a list by its index
+     * Set the value of an element in a list by its index
      * @param dbIndex
      * @param key
      * @param index
@@ -333,35 +330,35 @@ public class RedisService {
      * @return
      */
     public Boolean lset(int dbIndex, String key, long index, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForList().set(key, index, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForList().set(key, index, value);
         return true;
     }
 
     /**
      * RPUSH key value [value ...]
-     Append one or multiple values to a list
+     * Append one or multiple values to a list
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long rpush(int dbIndex, String key, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPush(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPush(key, value);
     }
 
     /**
      * RPUSHX key value
-     Append a value to a list, only if the list exists
+     * Append a value to a list, only if the list exists
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long rpushx(int dbIndex, String key, String value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForList().rightPushIfPresent(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForList().rightPushIfPresent(key, value);
     }
 
 
@@ -375,8 +372,8 @@ public class RedisService {
      * @return
      */
     public Long hdel(int dbIndex, String key, Object...hashKeys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().delete(key, hashKeys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().delete(key, hashKeys);
     }
 
     /**
@@ -388,8 +385,8 @@ public class RedisService {
      * @return
      */
     public Boolean hexists(int dbIndex, String key, Object hashKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().hasKey(key, hashKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().hasKey(key, hashKey);
     }
 
     /**
@@ -401,8 +398,8 @@ public class RedisService {
      * @return
      */
     public Object hget(int dbIndex, String key, Object hashKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().get(key, hashKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().get(key, hashKey);
     }
 
     /**
@@ -413,20 +410,8 @@ public class RedisService {
      * @return
      */
     public Map<Object, Object> hgetall(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().entries(key);
-    }
-    
-    /**
-     * HGETALL key
-     * Get all the fields and values in a hash
-     * @param dbIndex
-     * @param key
-     * @return
-     */
-    public Set<Object> hgetallfield(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().keys(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().entries(key);
     }
 
     /**
@@ -439,8 +424,8 @@ public class RedisService {
      * @return
      */
     public Long hincrby(int dbIndex, String key, Object hashKey, long delta) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().increment(key, hashKey, delta);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().increment(key, hashKey, delta);
     }
 
     /**
@@ -453,8 +438,8 @@ public class RedisService {
      * @return
      */
     public Double hincrbyfloat(int dbIndex, String key, Object hashKey, float delta) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().increment(key, hashKey, delta);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().increment(key, hashKey, delta);
     }
 
     /**
@@ -465,8 +450,8 @@ public class RedisService {
      * @return
      */
     public Set<Object> hkeys (int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().keys(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().keys(key);
     }
 
     /**
@@ -477,8 +462,8 @@ public class RedisService {
      * @return
      */
     public Long hlen(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().size(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().size(key);
     }
 
     /**
@@ -490,8 +475,8 @@ public class RedisService {
      * @return
      */
     public List<Object> hmget(int dbIndex, String key, Collection<Object> hashKeys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().multiGet(key, hashKeys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().multiGet(key, hashKeys);
     }
 
     /**
@@ -503,8 +488,8 @@ public class RedisService {
      * @return
      */
     public Boolean hmset(int dbIndex, String key, Map<Object, Object> map) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForHash().putAll(key, map);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForHash().putAll(key, map);
         return true;
     }
 
@@ -518,8 +503,8 @@ public class RedisService {
      * @return
      */
     public Boolean hset(int dbIndex, String key, Object hashKey, Object value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        redisTemplate.opsForHash().put(key, hashKey, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        opsForHash().put(key, hashKey, value);
         return true;
     }
 
@@ -533,8 +518,8 @@ public class RedisService {
      * @return
      */
     public Boolean hsetnx(int dbIndex, String key, Object hashKey, Object value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().putIfAbsent(key, hashKey, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().putIfAbsent(key, hashKey, value);
     }
 
     /**
@@ -545,8 +530,8 @@ public class RedisService {
      * @return
      */
     public List<Object> hvals(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().values(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().values(key);
     }
 
     /**
@@ -558,8 +543,8 @@ public class RedisService {
      * @return
      */
     public Cursor<Map.Entry<Object, Object>> hscan(int dbIndex, String key, ScanOptions options) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForHash().scan(key, options);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForHash().scan(key, options);
     }
 
     //ops for set
@@ -573,8 +558,8 @@ public class RedisService {
      * @return
      */
     public Long sadd(int dbIndex, String key, String...values) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().add(key, values);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().add(key, values);
     }
 
     /**
@@ -585,8 +570,8 @@ public class RedisService {
      * @return
      */
     public Long scard(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().size(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().size(key);
     }
 
     /**
@@ -598,8 +583,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sdiff(int dbIndex, String key, String otherKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().difference(key, otherKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().difference(key, otherKey);
     }
 
     /**
@@ -611,8 +596,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sdiff(int dbIndex, String key, Collection<String> otherKeys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().difference(key, otherKeys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().difference(key, otherKeys);
     }
 
     /**
@@ -625,8 +610,8 @@ public class RedisService {
      * @return
      */
     public Long sdiffstore(int dbIndex, String key, String otherKey, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().differenceAndStore(key, otherKey, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().differenceAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -639,8 +624,8 @@ public class RedisService {
      * @return
      */
     public Long sdiffstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().differenceAndStore(key, otherKeys, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().differenceAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -652,8 +637,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sinter(int dbIndex, String key, String otherKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().intersect(key, otherKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().intersect(key, otherKey);
     }
 
     /**
@@ -665,8 +650,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sinter(int dbIndex, String key, Collection<String> otherKeys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().intersect(key, otherKeys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().intersect(key, otherKeys);
     }
 
     /**
@@ -679,8 +664,8 @@ public class RedisService {
      * @return
      */
     public Long sinterstore(int dbIndex, String key, String otherKey, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().intersectAndStore(key, otherKey, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().intersectAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -693,8 +678,8 @@ public class RedisService {
      * @return
      */
     public Long sinterstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().intersectAndStore(key, otherKeys, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().intersectAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -706,7 +691,8 @@ public class RedisService {
      * @return
      */
     public Boolean sismember(int dbIndex, String key, Object value) {
-        return redisTemplate.opsForSet().isMember(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().isMember(key, value);
     }
 
     /**
@@ -717,8 +703,8 @@ public class RedisService {
      * @return
      */
     public Set<String> smembers(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().members(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().members(key);
     }
 
     /**
@@ -731,8 +717,8 @@ public class RedisService {
      * @return
      */
     public Boolean smove (int dbIndex, String key, String value, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().move(key, value, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().move(key, value, destKey);
     }
 
     /**
@@ -743,8 +729,8 @@ public class RedisService {
      * @return
      */
     public String spop(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().pop(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().pop(key);
     }
 
     /**
@@ -755,8 +741,8 @@ public class RedisService {
      * @return
      */
     public String srandmember(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().randomMember(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().randomMember(key);
     }
 
     /**
@@ -768,8 +754,8 @@ public class RedisService {
      * @return
      */
     public List<String> srandmember(int dbIndex, String key, long count) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().randomMembers(key, count);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().randomMembers(key, count);
     }
 
     /**
@@ -781,8 +767,8 @@ public class RedisService {
      * @return
      */
     public Long srem(int dbIndex, String key, Object...values) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().remove(key, values);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().remove(key, values);
     }
 
     /**
@@ -794,8 +780,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sunion(int dbIndex, String key, String otherKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().union(key, otherKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().union(key, otherKey);
     }
 
     /**
@@ -807,8 +793,8 @@ public class RedisService {
      * @return
      */
     public Set<String> sunion(int dbIndex, String key, Collection<String> otherKeys) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().union(key, otherKeys);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().union(key, otherKeys);
     }
 
     /**
@@ -821,8 +807,8 @@ public class RedisService {
      * @return
      */
     public Long sunionstore(int dbIndex, String key, String otherKey, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().unionAndStore(key, otherKey, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().unionAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -835,8 +821,8 @@ public class RedisService {
      * @return
      */
     public Long sunionstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().unionAndStore(key, otherKeys, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().unionAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -848,8 +834,8 @@ public class RedisService {
      * @return
      */
     public Cursor<String> sscan(int dbIndex, String key, ScanOptions options) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForSet().scan(key, options);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForSet().scan(key, options);
     }
 
     //ops for sorted set
@@ -864,8 +850,8 @@ public class RedisService {
      * @return
      */
     public Boolean zadd(int dbIndex, String key, String value, double score) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().add(key, value, score);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().add(key, value, score);
     }
 
     /**
@@ -876,8 +862,8 @@ public class RedisService {
      * @return
      */
     public Long zcard(int dbIndex, String key) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().zCard(key);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().zCard(key);
     }
 
     /**
@@ -890,8 +876,8 @@ public class RedisService {
      * @return
      */
     public Long zcount(int dbIndex, String key, double min, double max) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().count(key, min, max);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().count(key, min, max);
     }
 
     /**
@@ -904,8 +890,8 @@ public class RedisService {
      * @return
      */
     public Double zincrby(int dbIndex, String key, String value, double delta) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().incrementScore(key, value, delta);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().incrementScore(key, value, delta);
     }
 
     /**
@@ -918,8 +904,8 @@ public class RedisService {
      * @return
      */
     public Long zinterstore(int dbIndex, String key, String otherKey, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().intersectAndStore(key, otherKey, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().intersectAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -932,8 +918,8 @@ public class RedisService {
      * @return
      */
     public Long zinterstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().intersectAndStore(key, otherKeys, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().intersectAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -946,8 +932,8 @@ public class RedisService {
      * @return
      */
     public Set<String> zrange(int dbIndex, String key, long start, long stop) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().range(key, start, stop);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().range(key, start, stop);
     }
 
     /**
@@ -959,13 +945,13 @@ public class RedisService {
      * @return
      */
     public Set<String> zrangebylex(int dbIndex, String key, RedisZSetCommands.Range range) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().rangeByLex(key,range);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().rangeByLex(key, range);
     }
 
     /**
      * ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
-     Return a range of members in a sorted set, by score
+     * Return a range of members in a sorted set, by score
      * @param dbIndex
      * @param key
      * @param min
@@ -973,13 +959,13 @@ public class RedisService {
      * @return
      */
     public Set<String> zrangebysocre(int dbIndex, String key, double min, double max) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().rangeByScore(key, min, max);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().rangeByScore(key, min, max);
     }
 
     /**
      * ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
-     Return a range of members in a sorted set, by score
+     * Return a range of members in a sorted set, by score
      * @param dbIndex
      * @param key
      * @param min
@@ -989,39 +975,39 @@ public class RedisService {
      * @return
      */
     public Set<String> zrangebysocre(int dbIndex, String key, double min, double max, int offset, int count) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().rangeByScore(key, min, max, offset, count);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().rangeByScore(key, min, max, offset, count);
     }
 
     /**
      * ZRANK key member
-     Determine the index of a member in a sorted set
+     * Determine the index of a member in a sorted set
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long zrank(int dbIndex, String key, Object value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().rank(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().rank(key, value);
     }
 
     /**
      * ZREM key member [member ...]
-     Remove one or more members from a sorted set
+     * Remove one or more members from a sorted set
      * @param dbIndex
      * @param key
      * @param values
      * @return
      */
     public Long zrem(int dbIndex, String key, Object...values) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().remove(key, values);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().remove(key, values);
     }
 
     /**
      * ZREMRANGEBYRANK key start stop
-     Remove all members in a sorted set within the given indexes
+     * Remove all members in a sorted set within the given indexes
      * @param dbIndex
      * @param key
      * @param start
@@ -1029,13 +1015,13 @@ public class RedisService {
      * @return
      */
     public Long zremrangebyrank(int dbIndex, String key, long start, long stop) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().removeRange(key, start, stop);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().removeRange(key, start, stop);
     }
 
     /**
      * ZREMRANGEBYSCORE key min max
-     Remove all members in a sorted set within the given scores
+     * Remove all members in a sorted set within the given scores
      * @param dbIndex
      * @param key
      * @param min
@@ -1043,13 +1029,13 @@ public class RedisService {
      * @return
      */
     public Long zremrangebyscore(int dbIndex, String key, double min, double max) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().removeRangeByScore(key, min, max);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().removeRangeByScore(key, min, max);
     }
 
     /**
      * ZREVRANGE key start stop [WITHSCORES]
-     Return a range of members in a sorted set, by index, with scores ordered from high to low
+     * Return a range of members in a sorted set, by index, with scores ordered from high to low
      * @param dbIndex
      * @param key
      * @param start
@@ -1057,13 +1043,13 @@ public class RedisService {
      * @return
      */
     public Set<String> zrevrange(int dbIndex, String key, long start, long stop) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().reverseRange(key, start, stop);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().reverseRange(key, start, stop);
     }
 
     /**
      * ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
-     Return a range of members in a sorted set, by score, with scores ordered from high to low
+     * Return a range of members in a sorted set, by score, with scores ordered from high to low
      * @param dbIndex
      * @param key
      * @param min
@@ -1071,13 +1057,13 @@ public class RedisService {
      * @return
      */
     public Set<String> zrevrangebyscore(int dbIndex, String key, double min, double max) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().reverseRangeByScore(key, min, max);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().reverseRangeByScore(key, min, max);
     }
 
     /**
      * ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
-     Return a range of members in a sorted set, by score, with scores ordered from high to low
+     * Return a range of members in a sorted set, by score, with scores ordered from high to low
      * @param dbIndex
      * @param key
      * @param min
@@ -1085,39 +1071,39 @@ public class RedisService {
      * @return
      */
     public Set<String> zrevrangebyscore(int dbIndex, String key, double min, double max, int offset, int count) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().reverseRangeByScore(key, min, max, offset, count);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().reverseRangeByScore(key, min, max, offset, count);
     }
 
     /**
      * ZREVRANK key member
-     Determine the index of a member in a sorted set, with scores ordered from high to low
+     * Determine the index of a member in a sorted set, with scores ordered from high to low
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Long zrevrank(int dbIndex, String key, Object value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().reverseRank(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().reverseRank(key, value);
     }
 
     /**
      * ZSCORE key member
-     Get the score associated with the given member in a sorted set
+     * Get the score associated with the given member in a sorted set
      * @param dbIndex
      * @param key
      * @param value
      * @return
      */
     public Double zscore(int dbIndex, String key, Object value) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().score(key, value);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().score(key, value);
     }
 
     /**
      * ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-     Add multiple sorted sets and store the resulting sorted set in a new key
+     * Add multiple sorted sets and store the resulting sorted set in a new key
      * @param dbIndex
      * @param key
      * @param otherKey
@@ -1125,13 +1111,13 @@ public class RedisService {
      * @return
      */
     public Long zunionscore(int dbIndex, String key, String otherKey, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().unionAndStore(key, otherKey, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().unionAndStore(key, otherKey, destKey);
     }
 
     /**
      * ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-     Add multiple sorted sets and store the resulting sorted set in a new key
+     * Add multiple sorted sets and store the resulting sorted set in a new key
      * @param dbIndex
      * @param key
      * @param otherKeys
@@ -1139,20 +1125,38 @@ public class RedisService {
      * @return
      */
     public Long zunionscore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().unionAndStore(key, otherKeys, destKey);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().unionAndStore(key, otherKeys, destKey);
     }
+
 
     /**
      * ZSCAN key cursor [MATCH pattern] [COUNT count]
-     Incrementally iterate sorted sets elements and associated scores
+     * Incrementally iterate sorted sets elements and associated scores
      * @param dbIndex
      * @param key
      * @param options
      * @return
      */
     public Cursor<ZSetOperations.TypedTuple<String>> zscan(int dbIndex, String key, ScanOptions options) {
-        jedisConnectionFactory.setDatabase(dbIndex);
-        return redisTemplate.opsForZSet().scan(key, options);
+        LOCAL_DB_INDEX.set(dbIndex);
+        return opsForZSet().scan(key, options);
+    }
+
+    @Override
+    protected RedisConnection preProcessConnection(RedisConnection connection, boolean existingConnection) {
+        try {
+            Integer index = LOCAL_DB_INDEX.get();
+            if (index != null) {
+                if (connection instanceof CtiLinkJedisConnection) {
+                    if (((CtiLinkJedisConnection) connection).getDbIndex() != index) {
+                        connection.select(index);
+                    }
+                }
+            }
+        } finally {
+            LOCAL_DB_INDEX.remove();
+        }
+        return super.preProcessConnection(connection, existingConnection);
     }
 }

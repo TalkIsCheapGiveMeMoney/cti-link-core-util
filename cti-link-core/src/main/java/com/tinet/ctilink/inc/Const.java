@@ -36,6 +36,18 @@ public class Const {
     public static final int RADIUS_SERVER_ACCT_PORT = 1813;
 
 
+    public static final String SOUNDS_MOH_ABS_PATH = "/var/nfs/ctilink/voices/moh/";
+    public static final String SOUNDS_MOH_CTI_ABS_PATH = "/var/lib/moh/";
+    public static final String SOUNDS_IVR_VOICE_ABS_PATH = "/var/nfs/ctilink/voices/ivr_voice/";
+
+    public static final String SOUNDS_PATH = "/voices/";
+    public static final String SOUNDS_RECORD_PATH = "/voices/record/";
+    public static final String SOUNDS_RECORD_ASR_PATH = "/voices/record_asr/";
+    public static final String SOUNDS_VOICE_MAIL_PATH = "/voices/voice_mail/";
+    public static final String SOUNDS_MOH_PATH = "/voices/moh/";
+    public static final String SOUNDS_IVR_VOICE_PATH = "/voices/ivr_voice/";
+    public static final String AWS_S3_BUCKETNAME = "tinet-ctilink";
+
     public static final String PATTERN_MOBILE_WITH_PREFIX0 = "^01[3|5|8|4|7]\\d{9}";
     public static final String PATTERN_MOBILE_WITHOUT_PREFIX0 = "^1[3|5|8|4|7]\\d{9}";
     public static final String PATTERN_NUMBER_400 = "^400\\d{7}";
@@ -877,6 +889,12 @@ public class Const {
     /** 黑白名单设置 **/
     public static final String ENTERPRISE_SETTING_NAME_RESTRICT_TEL_TYPE = "restrict_tel_type";
 
+    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD = "is_record";
+
+    public static final String ENTERPRISE_SETTING_NAME_IS_CRBT_OPEN = "is_crbt_open"; //是否彩铃，对呼入有效
+
+    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_CRBT = "is_record_crbt";//是否彩铃录音
+
     /** 呼入录音功能是否开启 **/
     public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_IB = "is_record_ib";
 
@@ -1023,6 +1041,8 @@ public class Const {
     /** 企业并发限制数 */
     public static final String ENTERPRISE_SETTING_NAME_IB_CALL_LIMIT = "ib_call_limit";
 
+    public static final String ENTERPRISE_SETTING_NAME_CLID_LIST="clid_list";
+
     public static final String UNKNOWN_NUMBER = "unknown_number";
     public static final String UNKNOWN_AREA = "unknown_area";
 
@@ -1039,5 +1059,14 @@ public class Const {
 
     public static final Integer TEL_SET_STATUS_STOP = 1;
     public static final Integer TEL_SET_STATUS_ACTIVE = 0;
+
+    /**
+     * 呼入路由  enterprise_ivr_router
+     *
+     */
+    public static final int ENTERPRISE_IVR_ROUTER_TYPE_IVR = 1;
+    public static final int ENTERPRISE_IVR_ROUTER_TYPE_TEL = 2;
+    public static final int ENTERPRISE_IVR_ROUTER_TYPE_EXTEN = 3;
+
 
 }

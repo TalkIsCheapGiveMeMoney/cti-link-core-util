@@ -59,6 +59,7 @@ public class CacheKey {
     public static final String ENTITY_ENTERPRISE_ID = "cti-link.entity.%d";
 
     public static final String ENTITY_ENTERPRISE_ACTIVE = "cti-link.entity.active";
+
     /**
      * trunk  <10000
      */
@@ -83,30 +84,34 @@ public class CacheKey {
      */
     public static final String IVR_PROFILE_ENTERPRISE_ID_ID = "cti-link.ivr_profile.%d.id.%d";
 
+    public static final String IVR_PROFILE_ENTERPRISE_ID = "cti-link.ivr_profile.%d";
+
+    public static final String IVR_PROFILE = "cti-link.ivr_profile";
+
     /**
      * enterprise_setting  <1000
      */
     public static final String ENTERPRISE_SETTING_ENTERPRISE_ID_NAME = "cti-link.enterprise_setting.%d.name.%s";
 
-    public static final String ENTERPRISE_SETTING = "cti-link.enterprise_setting.";
+    public static final String ENTERPRISE_SETTING = "cti-link.enterprise_setting";
 
-    public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%d.";
+    public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%d";
 
     /**
      * agent  <20000
      */
     public static final String AGENT_ENTERPRISE_ID_CNO = "cti-link.agent.%d.cno.%s";
 
-    public static final String AGENT_ENTERPRISE_ID = "cti-link.agent.%d.";
+    public static final String AGENT_ENTERPRISE_ID = "cti-link.agent.%d";
 
-    public static final String AGENT = "cti-link.agent.";
+    public static final String AGENT = "cti-link.agent";
 
     /**
      * agent_tel <100000
      */
     public static final String AGENT_TEL_ENTERPRISE_ID_CNO = "cti-link.agent_tel.%d.cno.%s";
 
-    public static final String AGENT_TEL_ENTERPRISE_ID = "cti-link.agent_tel.%d.";
+    public static final String AGENT_TEL_ENTERPRISE_ID = "cti-link.agent_tel.%d";
 
     /**
      * queue  <10000
@@ -121,15 +126,13 @@ public class CacheKey {
 
     public static final String QUEUE_MEMBER_QNO_CNO = "cti-link.queue_member.qno.%s.cno.%s";
 
-    public static final String QUEUE_MEMBER_AGENT_ID = "cti-link.queue_member.agent_id.%d";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.enterprise_id.%d.cno.%s";
 
 
     /**
      * enterprise_ivr  <1000
      */
     public static final String ENTERPRISE_IVR_ENTERPRISE_ID_IVR_ID = "cti-link.enterprise_ivr.%d.ivr_id.%d";
-
-    public static final String ENTERPRISE_IVR_ENTERPRISE_ID_ID = "cti-link.enterprise_ivr.%d.id.%d";
 
     /**
      * enterprise_ivr_router  <1000
