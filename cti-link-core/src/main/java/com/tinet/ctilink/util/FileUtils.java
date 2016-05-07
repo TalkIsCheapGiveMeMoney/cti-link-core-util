@@ -159,18 +159,5 @@ public class FileUtils {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * public void tarExcelFileAndExport(String path, HSSFWorkbook workbook,
-	 * OutputStream os){ writeExcelFile(path, workbook);
-	 * 
-	 * String cmd = "/usr/local/bin/sox -V6 " + Const.SOUNDS_IVR_VOICE_ABS_PATH
-	 * + srcFile + " -c 1 -b 16 -r 8k -S " + Const.SOUNDS_IVR_VOICE_ABS_PATH +
-	 * dstFile; String result = SystemCmd.executeCmd(cmd); }
-	 * 
-	 * public void writeExcelFile(String path, HSSFWorkbook workbook){ File f =
-	 * new File(path); OutputStream os = null; try{ os = new
-	 * FileOutputStream(f); workbook.write(os); }catch(Exception e){
-	 * e.printStackTrace(); }finally{ try{ os.close(); }catch(Exception e){
-	 * e.printStackTrace(); } } }
-	 */
+
 }

@@ -30,9 +30,9 @@ public class DataSyncEventListener implements MessageListener {
 	/**
 	 * 接收Redis的广播消息，调用事件处理器进行处理
 	 * 
-	 * @param object
+	 * @param message
 	 *            从Redis事件广播接收的对象
-	 * @param channel
+	 * @param pattern
 	 *            Redis的广播Channel，在配置文件里通过通配符匹配多个Channel
 	 */
 	@Override
