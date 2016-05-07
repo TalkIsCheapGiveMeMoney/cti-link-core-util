@@ -198,4 +198,20 @@ public class CacheKey {
      * tel_set_tel  <10000
      */
     public static final String TEL_SET_TEL_ENTERPRISE_TSNO = "cti-link.tel_set_tel.%d.tsno.%s";
+    
+    /**
+     * agent_skill < 100000
+     */
+    public static final String AGNET_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.agent_skill.%d.agent_id.%d";
+    
+    /**
+     * queue_skill < 10000
+     */
+    public static final String QUEUE_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.queue_skill.%d.agent_id.%d";
+    
+    /**
+     * queue_member < 1000
+     */
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.%d.qno.%s";
+    
 }
