@@ -122,9 +122,9 @@ public class CacheKey {
     /**
      * queue_member  <1000
      */
-    public static final String QUEUE_MEMBER_QNO = "cti-link.queue_member.qno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.qno.%s";
 
-    public static final String QUEUE_MEMBER_QNO_CNO = "cti-link.queue_member.qno.%s.cno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO_CNO = "cti-link.queue_member.qno.%s.cno.%s";
 
     public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.enterprise_id.%d.cno.%s";
 
@@ -209,9 +209,5 @@ public class CacheKey {
      */
     public static final String QUEUE_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.queue_skill.%d.agent_id.%d";
     
-    /**
-     * queue_member < 1000
-     */
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.%d.qno.%s";
     
 }
