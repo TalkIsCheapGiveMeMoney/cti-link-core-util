@@ -560,7 +560,7 @@ public class Const {
     public static final String SYSTEM_SETTING_NAME_WEB400_VISITOR_EXPIRE_MONTH = "web400_visitor_expire_month";
     public static final String SYSTEM_SETTING_NAME_MONITOR_SERVER_EXPIRE_MONTH = "monitor_server_expire_month";
     public static final String SYSTEM_SETTING_NAME_CASE_LIB_EXPIRE_MONTH = "case_lib_expire_month";
-    public static final String SYSTEM_SETTING_NAME_TTSSC_URL = "ttssc_url";
+    public static final String SYSTEM_SETTING_NAME_TTSS_PROXY_URL = "tts_proxy_url";
 
 
     public static final int ENTERPRISE_PUSH_TYPE_HANGUP_IB = 1;// 来电挂机
