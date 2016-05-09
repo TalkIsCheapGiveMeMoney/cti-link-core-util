@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinet.ctilink.jedis.CtiLinkJedisConnection;
+import com.tinet.ctilink.json.JSONObject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -452,6 +454,29 @@ public class RedisService extends StringRedisTemplate {
     }
 
     /**
+     * 
+     * @param dbIndex
+     * @param key
+     * @param hashKey
+     * @param clazz
+     * @return
+     */
+    public <T> T hget(int dbIndex, String key, Object hashKey, Class<T> clazz) {
+        T t = null;
+        try {
+            LOCAL_DB_INDEX.set(dbIndex);
+            String value = opsForHash().get(key, hashKey).toString();
+            if (StringUtils.isEmpty(value)) {
+                return null;
+            }
+
+            t = mapper.readValue(value, clazz);
+        } catch (Exception e) {
+            logger.error("RedisService.get error", e);
+        }
+        return t;
+    }
+    /**
      * HGETALL key
      * Get all the fields and values in a hash
      * @param dbIndex
@@ -462,7 +487,33 @@ public class RedisService extends StringRedisTemplate {
         LOCAL_DB_INDEX.set(dbIndex);
         return opsForHash().entries(key);
     }
-
+	/**
+	 * 
+	 * @param dbIndex
+	 * @param key
+	 * @param clazz
+	 * @return
+	 */
+    public <T> List<T> hgetList(int dbIndex, String key, Class<T> clazz) {
+        List<T> list = null;
+        try {
+            LOCAL_DB_INDEX.set(dbIndex);
+            Map<Object, Object> map = opsForHash().entries(key);
+            if(map != null){
+    	    	list = new ArrayList<T>();
+    	    	for(Object mapKey: map.keySet()){
+    	    		String jsonStr = map.get(mapKey).toString();
+    	    		if(StringUtils.isNotEmpty(jsonStr)){
+    	    			T t = JSONObject.fromObject(jsonStr).getBean(clazz);
+    	    			list.add(t);
+    	    		}
+    	    	}
+        	}
+        } catch (Exception e) {
+            logger.error("RedisService.getList error", e);
+        }
+        return list;
+    }
     /**
      * HINCRBY key field increment
      * Increment the integer value of a hash field by the given number
