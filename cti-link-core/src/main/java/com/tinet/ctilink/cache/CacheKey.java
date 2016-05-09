@@ -122,11 +122,11 @@ public class CacheKey {
     /**
      * queue_member  <1000
      */
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.qno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.%s.qno.%s";
 
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO_CNO = "cti-link.queue_member.qno.%s.cno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO_CNO = "cti-link.queue_member.%s.qno.%s.cno.%s";
 
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.enterprise_id.%d.cno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.%d.cno.%s";
 
 
     /**
