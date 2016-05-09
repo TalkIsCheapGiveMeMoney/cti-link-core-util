@@ -99,9 +99,58 @@ public class RedisService extends StringRedisTemplate {
         return list;
     }
 
-    public Set<String> keys(int dbIndex, String pattern) {
+    public Set<String> scan(int dbIndex, String pattern) {
         LOCAL_DB_INDEX.set(dbIndex);
-        return keys(pattern);
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
+        return execute(new RedisCallback<Set<String>>() {
+            @Override
+            public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
+                boolean done = false;
+                Set<String> keySet = new HashSet<String>();
+                // the while-loop below makes sure that we'll get a valid cursor -
+                // by looking harder if we don't get a result initially
+                while (!done) {
+                    Cursor<byte[]> c = connection.scan(scanOptions);
+                    try {
+                        while (c.hasNext()) {
+                            byte[] b = c.next();
+                            keySet.add(new String(b));
+                        }
+                        done = true; //we've made it here, lets go away
+                    } catch (NoSuchElementException nse) {
+                        logger.error("RedisService.scan error", nse);
+                    }
+                }
+                return keySet;
+            }
+        });
+    }
+
+    public Set<String> scan(int dbIndex, String pattern, long count) {
+        LOCAL_DB_INDEX.set(dbIndex);
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
+        return execute(new RedisCallback<Set<String>>() {
+            @Override
+            public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
+                boolean done = false;
+                Set<String> keySet = new HashSet<String>();
+                // the while-loop below makes sure that we'll get a valid cursor -
+                // by looking harder if we don't get a result initially
+                while (!done) {
+                    Cursor<byte[]> c = connection.scan(scanOptions);
+                    try {
+                        while (c.hasNext()) {
+                            byte[] b = c.next();
+                            keySet.add(new String(b));
+                        }
+                        done = true; //we've made it here, lets go away
+                    } catch (NoSuchElementException nse) {
+                        logger.error("RedisService.scan error", nse);
+                    }
+                }
+                return keySet;
+            }
+        });
     }
 
     public Boolean incrby(int dbIndex, String key, long delta) {
