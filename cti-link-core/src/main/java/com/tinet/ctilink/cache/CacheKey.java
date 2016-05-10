@@ -9,6 +9,11 @@ package com.tinet.ctilink.cache;
 public class CacheKey {
 
     /**
+     * sip_group  <5
+     */
+    public static final String SIP_GROUP = "cti-link.sip_group.list";
+
+    /**
      * sip_media_server  < 1000
      */
     public static final String SIP_MEDIA_SERVER_IP_ADDR = "cti-link.sip_media_server.ip_addr.%s";
@@ -95,14 +100,14 @@ public class CacheKey {
 
     public static final String ENTERPRISE_SETTING = "cti-link.enterprise_setting";
 
-    public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%d";
+    public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%s";
 
     /**
      * agent  <20000
      */
     public static final String AGENT_ENTERPRISE_ID_CNO = "cti-link.agent.%d.cno.%s";
 
-    public static final String AGENT_ENTERPRISE_ID = "cti-link.agent.%d";
+    public static final String AGENT_ENTERPRISE_ID = "cti-link.agent.%s";
 
     public static final String AGENT = "cti-link.agent";
 
@@ -111,23 +116,23 @@ public class CacheKey {
      */
     public static final String AGENT_TEL_ENTERPRISE_ID_CNO = "cti-link.agent_tel.%d.cno.%s";
 
-    public static final String AGENT_TEL_ENTERPRISE_ID = "cti-link.agent_tel.%d";
+    public static final String AGENT_TEL_ENTERPRISE_ID = "cti-link.agent_tel.%s";
 
     /**
      * queue  <10000
      */
     public static final String QUEUE_ENTERPRISE_ID_QNO = "cti-link.queue.%d.qno.%s";
 
+    public static final String QUEUE_ENTERPRISE_ID = "cti-link.queue.%s";
 
     /**
      * queue_member  <1000
      */
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.qno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO = "cti-link.queue_member.enterprise_id.%d.qno.%s";
 
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO_CNO = "cti-link.queue_member.qno.%s.cno.%s";
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_QNO_CNO = "cti-link.queue_member.enterprise_id.qno.cno.%d.%s.%s";
 
-    public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.enterprise_id.%d.cno.%s";
-
+    public static final String QUEUE_MEMBER_ENTERPRISE_ID_CNO = "cti-link.queue_member.enterprise_id.cno.%d.%s";
 
     /**
      * enterprise_ivr  <1000
