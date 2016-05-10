@@ -11,7 +11,7 @@
 	</bean>
 
 	<!-- 定义Spring Redis连接工厂 -->
-	<bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.CtiLinkJedisConnectionFactory">
+	<bean id="redisConnectionFactory" class="com.tinet.ctilink.jedis.CtiLinkJedisConnectionFactory">
 		<property name="hostName" value="${redis.url}" />
 		<property name="port" value="${redis.port}" />
 		<property name="database" value="0" />
