@@ -68,6 +68,7 @@ public class RedisService extends StringRedisTemplate {
         return result;
     }
     public <T> Boolean multiset(int dbIndex, Map<String, T> map) {
+        LOCAL_DB_INDEX.set(dbIndex);
         executePipelined(new RedisCallback<Object>() {
             @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
