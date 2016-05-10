@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +66,25 @@ public class RedisService extends StringRedisTemplate {
         }
 
         return result;
+    }
+    public <T> Boolean multiset(int dbIndex, Map<String, T> map) {
+        executePipelined(new RedisCallback<Object>() {
+            @Override
+            public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                for(Map.Entry<String, T> entry : map.entrySet()) {
+                    String json;
+                    try {
+                        json = mapper.writeValueAsString(entry.getValue());
+                    } catch (JsonProcessingException e) {
+                        continue;
+                    }
+                    connection.set(((RedisSerializer<String>)getKeySerializer()).serialize(entry.getKey()),
+                            ((RedisSerializer<String>)getValueSerializer()).serialize(json));
+                }
+                return null;
+            }
+        });
+        return true;
     }
 
     public <T> T get(int dbIndex, String key, Class<T> clazz) {
