@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SipMediaServerUtil {
 
-    public static Integer getInstanceId(String uniqueId) {
+    public static Integer getSipId(String uniqueId) {
         if (StringUtils.isEmpty(uniqueId)) {
             return null;
         }
