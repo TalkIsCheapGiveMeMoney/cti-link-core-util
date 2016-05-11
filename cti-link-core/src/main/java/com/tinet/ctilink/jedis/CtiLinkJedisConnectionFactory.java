@@ -51,7 +51,6 @@ import org.springframework.util.StringUtils;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
 import redis.clients.jedis.JedisShardInfo;
@@ -260,13 +259,13 @@ public class CtiLinkJedisConnectionFactory implements InitializingBean, Disposab
 	}
 
 	/**
-	 * Creates {@link JedisPool}.
+	 * Creates {@link CtiLinkJedisPool}.
 	 * 
 	 * @return
 	 * @since 1.4
 	 */
 	protected Pool<Jedis> createRedisPool() {
-		return new JedisPool(getPoolConfig(), getShardInfo().getHost(), getShardInfo().getPort(),
+		return new CtiLinkJedisPool(getPoolConfig(), getShardInfo().getHost(), getShardInfo().getPort(),
 				getTimeoutFrom(getShardInfo()), getShardInfo().getPassword());
 	}
 
