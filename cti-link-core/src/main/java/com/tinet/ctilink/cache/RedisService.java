@@ -163,7 +163,6 @@ public class RedisService extends StringRedisTemplate {
 
     //发布消息到Channel
     public <T> Boolean convertAndSend(int dbIndex, String channel, T message) {
-        LOCAL_DB_INDEX.set(dbIndex);
         convertAndSend(channel, message);
         return true;
     }
