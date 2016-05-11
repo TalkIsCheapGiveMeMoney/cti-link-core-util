@@ -3,12 +3,12 @@ package com.tinet.ctilink.cache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinet.ctilink.jedis.CtiLinkJedisConnection;
 import com.tinet.ctilink.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
@@ -23,34 +23,35 @@ import java.util.concurrent.TimeUnit;
  * @date 16/4/15 17:15
  */
 
-public class RedisService extends StringRedisTemplate {
+public class RedisService {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisService.class);
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    private ThreadLocal<Integer> LOCAL_DB_INDEX = new ThreadLocal<>();
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Boolean set(int dbIndex, String key, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForValue().set(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForValue().set(key, value);
         return true;
     }
 
     public String get(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForValue().get(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForValue().get(key);
     }
 
     public Boolean delete(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        delete(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.delete(key);
         return true;
     }
 
     public Boolean delete(int dbIndex, Set<String> keys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        delete(keys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.delete(keys);
         return true;
     }
 
@@ -58,8 +59,8 @@ public class RedisService extends StringRedisTemplate {
         boolean result = true;
         try {
             String json = mapper.writeValueAsString(t);
-            LOCAL_DB_INDEX.set(dbIndex);
-            opsForValue().set(key, json);
+            RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+            redisTemplate.opsForValue().set(key, json);
         } catch (JsonProcessingException e) {
             logger.error("RedisService.set error, key=" + key + " value=" + t, e);
             result = false;
@@ -68,19 +69,19 @@ public class RedisService extends StringRedisTemplate {
         return result;
     }
     public <T> Boolean multiset(int dbIndex, Map<String, T> map) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        executePipelined(new RedisCallback<Object>() {
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.executePipelined(new RedisCallback<Object>() {
             @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                for(Map.Entry<String, T> entry : map.entrySet()) {
+                for (Map.Entry<String, T> entry : map.entrySet()) {
                     String json;
                     try {
                         json = mapper.writeValueAsString(entry.getValue());
                     } catch (JsonProcessingException e) {
                         continue;
                     }
-                    connection.set(((RedisSerializer<String>)getKeySerializer()).serialize(entry.getKey()),
-                            ((RedisSerializer<String>)getValueSerializer()).serialize(json));
+                    connection.set(((RedisSerializer<String>) redisTemplate.getKeySerializer()).serialize(entry.getKey()),
+                            ((RedisSerializer<String>) redisTemplate.getValueSerializer()).serialize(json));
                 }
                 return null;
             }
@@ -91,8 +92,8 @@ public class RedisService extends StringRedisTemplate {
     public <T> T get(int dbIndex, String key, Class<T> clazz) {
         T t = null;
         try {
-            LOCAL_DB_INDEX.set(dbIndex);
-            String value = opsForValue().get(key);
+            RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+            String value = redisTemplate.opsForValue().get(key);
             if (StringUtils.isEmpty(value)) {
                 return null;
             }
@@ -107,8 +108,8 @@ public class RedisService extends StringRedisTemplate {
     public <T> List<T> getList(int dbIndex, String key, Class<T> clazz) {
         List<T> list = null;
         try {
-            LOCAL_DB_INDEX.set(dbIndex);
-            String value = opsForValue().get(key);
+            RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+            String value = redisTemplate.opsForValue().get(key);
             if (StringUtils.isEmpty(value)) {
                 return null;
             }
@@ -123,9 +124,9 @@ public class RedisService extends StringRedisTemplate {
     }
 
     public Set<String> scan(int dbIndex, String pattern) {
-        LOCAL_DB_INDEX.set(dbIndex);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
         ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
-        return execute(new RedisCallback<Set<String>>() {
+        return redisTemplate.execute(new RedisCallback<Set<String>>() {
             @Override
             public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
                 boolean done = false;
@@ -150,9 +151,9 @@ public class RedisService extends StringRedisTemplate {
     }
 
     public Set<String> scan(int dbIndex, String pattern, long count) {
-        LOCAL_DB_INDEX.set(dbIndex);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
         ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
-        return execute(new RedisCallback<Set<String>>() {
+        return redisTemplate.execute(new RedisCallback<Set<String>>() {
             @Override
             public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
                 boolean done = false;
@@ -177,15 +178,14 @@ public class RedisService extends StringRedisTemplate {
     }
 
     public Boolean incrby(int dbIndex, String key, long delta) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForValue().increment(key, delta);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForValue().increment(key, delta);
         return true;
     }
 
     //发布消息到Channel
-    public <T> Boolean convertAndSend(int dbIndex, String channel, T message) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        convertAndSend(channel, message);
+    public <T> Boolean convertAndSend(String channel, T message) {
+        redisTemplate.convertAndSend(channel, message);
         return true;
     }
 
@@ -195,7 +195,7 @@ public class RedisService extends StringRedisTemplate {
      * @return 时间戳
      */
     public Long time() {
-        return execute(new RedisCallback<Long>() {
+        return redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection connection) throws DataAccessException {
                 return connection.time();
@@ -212,8 +212,8 @@ public class RedisService extends StringRedisTemplate {
      * @return list中的第一个元素
      */
     public String lpop(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().leftPop(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().leftPop(key);
     }
 
     /**
@@ -226,8 +226,8 @@ public class RedisService extends StringRedisTemplate {
      * @return list中的第一个元素
      */
     public String blpop(int dbIndex, String key, long timeout, TimeUnit timeUnit) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().leftPop(key, timeout, timeUnit);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().leftPop(key, timeout, timeUnit);
     }
 
     /**
@@ -238,8 +238,8 @@ public class RedisService extends StringRedisTemplate {
      * @return list中最后一个元素
      */
     public String rpop(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPop(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPop(key);
     }
 
     /**
@@ -252,8 +252,8 @@ public class RedisService extends StringRedisTemplate {
      * @return list中最后一个元素
      */
     public String brpop(int dbIndex, String key, long timeout, TimeUnit timeUnit) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPop(key, timeout, timeUnit);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPop(key, timeout, timeUnit);
     }
 
     /**
@@ -265,8 +265,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public String rpoplpush(int dbIndex, String sourceKey, String destinationKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPopAndLeftPush(sourceKey, destinationKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPopAndLeftPush(sourceKey, destinationKey);
     }
 
     /**
@@ -280,8 +280,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public String brpoplpush(int dbIndex, String sourceKey, String destinationKey, long timeout, TimeUnit timeUnit) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPopAndLeftPush(sourceKey, destinationKey, timeout, timeUnit);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPopAndLeftPush(sourceKey, destinationKey, timeout, timeUnit);
     }
 
     /**
@@ -293,8 +293,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public String lindex(int dbIndex, String key, long index) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().index(key, index);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().index(key, index);
     }
 
     /**
@@ -307,8 +307,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long linsert(int dbIndex, String key, String pivot, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().leftPush(key, pivot, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().leftPush(key, pivot, value);
     }
 
     /**
@@ -319,8 +319,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long llen(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().size(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().size(key);
     }
 
     /**
@@ -332,8 +332,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long lpush(int dbIndex, String key, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().leftPush(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().leftPush(key, value);
     }
 
     /**
@@ -345,8 +345,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long lpushx(int dbIndex, String key, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().leftPushIfPresent(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().leftPushIfPresent(key, value);
     }
 
     /**
@@ -359,8 +359,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public List<String> lrange(int dbIndex, String key, long start, long end) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().range(key, start, end);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().range(key, start, end);
     }
 
     /**
@@ -373,8 +373,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long lrem(int dbIndex, String key, long count, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().remove(key, count, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().remove(key, count, value);
     }
 
     /**
@@ -387,8 +387,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean ltrim(int dbIndex, String key, long start, long end) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForList().trim(key, start, end);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForList().trim(key, start, end);
         return true;
     }
 
@@ -402,8 +402,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean lset(int dbIndex, String key, long index, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForList().set(key, index, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForList().set(key, index, value);
         return true;
     }
 
@@ -416,8 +416,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long rpush(int dbIndex, String key, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPush(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPush(key, value);
     }
 
     /**
@@ -429,8 +429,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long rpushx(int dbIndex, String key, String value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForList().rightPushIfPresent(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForList().rightPushIfPresent(key, value);
     }
 
 
@@ -444,8 +444,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long hdel(int dbIndex, String key, Object...hashKeys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().delete(key, hashKeys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().delete(key, hashKeys);
     }
 
     /**
@@ -457,8 +457,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean hexists(int dbIndex, String key, Object hashKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().hasKey(key, hashKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().hasKey(key, hashKey);
     }
 
     /**
@@ -470,8 +470,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Object hget(int dbIndex, String key, Object hashKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().get(key, hashKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().get(key, hashKey);
     }
 
     /**
@@ -485,8 +485,8 @@ public class RedisService extends StringRedisTemplate {
     public <T> T hget(int dbIndex, String key, Object hashKey, Class<T> clazz) {
         T t = null;
         try {
-            LOCAL_DB_INDEX.set(dbIndex);
-            String value = opsForHash().get(key, hashKey).toString();
+            RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+            String value = redisTemplate.opsForHash().get(key, hashKey).toString();
             if (StringUtils.isEmpty(value)) {
                 return null;
             }
@@ -505,8 +505,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Map<Object, Object> hgetall(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().entries(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().entries(key);
     }
 	/**
 	 * 
@@ -518,8 +518,8 @@ public class RedisService extends StringRedisTemplate {
     public <T> List<T> hgetList(int dbIndex, String key, Class<T> clazz) {
         List<T> list = null;
         try {
-            LOCAL_DB_INDEX.set(dbIndex);
-            Map<Object, Object> map = opsForHash().entries(key);
+            RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+            Map<Object, Object> map = redisTemplate.opsForHash().entries(key);
             if(map != null){
     	    	list = new ArrayList<T>();
     	    	for(Object mapKey: map.keySet()){
@@ -545,8 +545,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long hincrby(int dbIndex, String key, Object hashKey, long delta) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().increment(key, hashKey, delta);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().increment(key, hashKey, delta);
     }
 
     /**
@@ -559,8 +559,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Double hincrbyfloat(int dbIndex, String key, Object hashKey, float delta) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().increment(key, hashKey, delta);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().increment(key, hashKey, delta);
     }
 
     /**
@@ -571,8 +571,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<Object> hkeys (int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().keys(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().keys(key);
     }
 
     /**
@@ -583,8 +583,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long hlen(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().size(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().size(key);
     }
 
     /**
@@ -596,8 +596,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public List<Object> hmget(int dbIndex, String key, Collection<Object> hashKeys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().multiGet(key, hashKeys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().multiGet(key, hashKeys);
     }
 
     /**
@@ -609,8 +609,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean hmset(int dbIndex, String key, Map<Object, Object> map) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForHash().putAll(key, map);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForHash().putAll(key, map);
         return true;
     }
 
@@ -624,8 +624,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean hset(int dbIndex, String key, Object hashKey, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        opsForHash().put(key, hashKey, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.opsForHash().put(key, hashKey, value);
         return true;
     }
 
@@ -639,8 +639,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean hsetnx(int dbIndex, String key, Object hashKey, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().putIfAbsent(key, hashKey, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().putIfAbsent(key, hashKey, value);
     }
 
     /**
@@ -651,8 +651,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public List<Object> hvals(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().values(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().values(key);
     }
 
     /**
@@ -664,8 +664,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Cursor<Map.Entry<Object, Object>> hscan(int dbIndex, String key, ScanOptions options) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForHash().scan(key, options);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForHash().scan(key, options);
     }
 
     //ops for set
@@ -679,8 +679,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sadd(int dbIndex, String key, String...values) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().add(key, values);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().add(key, values);
     }
 
     /**
@@ -691,8 +691,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long scard(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().size(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().size(key);
     }
 
     /**
@@ -704,8 +704,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sdiff(int dbIndex, String key, String otherKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().difference(key, otherKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().difference(key, otherKey);
     }
 
     /**
@@ -717,8 +717,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sdiff(int dbIndex, String key, Collection<String> otherKeys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().difference(key, otherKeys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().difference(key, otherKeys);
     }
 
     /**
@@ -731,8 +731,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sdiffstore(int dbIndex, String key, String otherKey, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().differenceAndStore(key, otherKey, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().differenceAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -745,8 +745,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sdiffstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().differenceAndStore(key, otherKeys, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().differenceAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -758,8 +758,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sinter(int dbIndex, String key, String otherKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().intersect(key, otherKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().intersect(key, otherKey);
     }
 
     /**
@@ -771,8 +771,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sinter(int dbIndex, String key, Collection<String> otherKeys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().intersect(key, otherKeys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().intersect(key, otherKeys);
     }
 
     /**
@@ -785,8 +785,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sinterstore(int dbIndex, String key, String otherKey, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().intersectAndStore(key, otherKey, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().intersectAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -799,8 +799,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sinterstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().intersectAndStore(key, otherKeys, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().intersectAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -812,8 +812,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean sismember(int dbIndex, String key, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().isMember(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().isMember(key, value);
     }
 
     /**
@@ -824,8 +824,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> smembers(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().members(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().members(key);
     }
 
     /**
@@ -838,8 +838,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean smove (int dbIndex, String key, String value, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().move(key, value, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().move(key, value, destKey);
     }
 
     /**
@@ -850,8 +850,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public String spop(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().pop(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().pop(key);
     }
 
     /**
@@ -862,8 +862,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public String srandmember(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().randomMember(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().randomMember(key);
     }
 
     /**
@@ -875,8 +875,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public List<String> srandmember(int dbIndex, String key, long count) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().randomMembers(key, count);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().randomMembers(key, count);
     }
 
     /**
@@ -888,8 +888,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long srem(int dbIndex, String key, Object...values) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().remove(key, values);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().remove(key, values);
     }
 
     /**
@@ -901,8 +901,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sunion(int dbIndex, String key, String otherKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().union(key, otherKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().union(key, otherKey);
     }
 
     /**
@@ -914,8 +914,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> sunion(int dbIndex, String key, Collection<String> otherKeys) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().union(key, otherKeys);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().union(key, otherKeys);
     }
 
     /**
@@ -928,8 +928,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sunionstore(int dbIndex, String key, String otherKey, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().unionAndStore(key, otherKey, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().unionAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -942,8 +942,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long sunionstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().unionAndStore(key, otherKeys, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().unionAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -955,8 +955,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Cursor<String> sscan(int dbIndex, String key, ScanOptions options) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForSet().scan(key, options);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForSet().scan(key, options);
     }
 
     //ops for sorted set
@@ -971,8 +971,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Boolean zadd(int dbIndex, String key, String value, double score) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().add(key, value, score);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().add(key, value, score);
     }
 
     /**
@@ -983,8 +983,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zcard(int dbIndex, String key) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().zCard(key);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().zCard(key);
     }
 
     /**
@@ -997,8 +997,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zcount(int dbIndex, String key, double min, double max) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().count(key, min, max);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().count(key, min, max);
     }
 
     /**
@@ -1011,8 +1011,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Double zincrby(int dbIndex, String key, String value, double delta) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().incrementScore(key, value, delta);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().incrementScore(key, value, delta);
     }
 
     /**
@@ -1025,8 +1025,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zinterstore(int dbIndex, String key, String otherKey, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().intersectAndStore(key, otherKey, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().intersectAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -1039,8 +1039,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zinterstore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().intersectAndStore(key, otherKeys, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().intersectAndStore(key, otherKeys, destKey);
     }
 
     /**
@@ -1053,8 +1053,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrange(int dbIndex, String key, long start, long stop) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().range(key, start, stop);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().range(key, start, stop);
     }
 
     /**
@@ -1066,8 +1066,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrangebylex(int dbIndex, String key, RedisZSetCommands.Range range) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().rangeByLex(key, range);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().rangeByLex(key, range);
     }
 
     /**
@@ -1080,8 +1080,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrangebysocre(int dbIndex, String key, double min, double max) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().rangeByScore(key, min, max);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().rangeByScore(key, min, max);
     }
 
     /**
@@ -1096,8 +1096,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrangebysocre(int dbIndex, String key, double min, double max, int offset, int count) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().rangeByScore(key, min, max, offset, count);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().rangeByScore(key, min, max, offset, count);
     }
 
     /**
@@ -1109,8 +1109,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zrank(int dbIndex, String key, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().rank(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().rank(key, value);
     }
 
     /**
@@ -1122,8 +1122,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zrem(int dbIndex, String key, Object...values) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().remove(key, values);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().remove(key, values);
     }
 
     /**
@@ -1136,8 +1136,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zremrangebyrank(int dbIndex, String key, long start, long stop) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().removeRange(key, start, stop);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().removeRange(key, start, stop);
     }
 
     /**
@@ -1150,8 +1150,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zremrangebyscore(int dbIndex, String key, double min, double max) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().removeRangeByScore(key, min, max);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().removeRangeByScore(key, min, max);
     }
 
     /**
@@ -1164,8 +1164,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrevrange(int dbIndex, String key, long start, long stop) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().reverseRange(key, start, stop);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().reverseRange(key, start, stop);
     }
 
     /**
@@ -1178,8 +1178,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrevrangebyscore(int dbIndex, String key, double min, double max) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().reverseRangeByScore(key, min, max);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().reverseRangeByScore(key, min, max);
     }
 
     /**
@@ -1192,8 +1192,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Set<String> zrevrangebyscore(int dbIndex, String key, double min, double max, int offset, int count) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().reverseRangeByScore(key, min, max, offset, count);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().reverseRangeByScore(key, min, max, offset, count);
     }
 
     /**
@@ -1205,8 +1205,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zrevrank(int dbIndex, String key, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().reverseRank(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().reverseRank(key, value);
     }
 
     /**
@@ -1218,8 +1218,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Double zscore(int dbIndex, String key, Object value) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().score(key, value);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().score(key, value);
     }
 
     /**
@@ -1232,8 +1232,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zunionscore(int dbIndex, String key, String otherKey, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().unionAndStore(key, otherKey, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().unionAndStore(key, otherKey, destKey);
     }
 
     /**
@@ -1246,8 +1246,8 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Long zunionscore(int dbIndex, String key, Collection<String> otherKeys, String destKey) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().unionAndStore(key, otherKeys, destKey);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().unionAndStore(key, otherKeys, destKey);
     }
 
 
@@ -1260,24 +1260,9 @@ public class RedisService extends StringRedisTemplate {
      * @return
      */
     public Cursor<ZSetOperations.TypedTuple<String>> zscan(int dbIndex, String key, ScanOptions options) {
-        LOCAL_DB_INDEX.set(dbIndex);
-        return opsForZSet().scan(key, options);
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.opsForZSet().scan(key, options);
     }
 
-    @Override
-    protected RedisConnection preProcessConnection(RedisConnection connection, boolean existingConnection) {
-        try {
-            Integer index = LOCAL_DB_INDEX.get();
-            if (index != null) {
-                if (connection instanceof CtiLinkJedisConnection) {
-                    if (((CtiLinkJedisConnection) connection).getDbIndex() != index) {
-                        connection.select(index);
-                    }
-                }
-            }
-        } finally {
-            LOCAL_DB_INDEX.remove();
-        }
-        return super.preProcessConnection(connection, existingConnection);
-    }
+
 }

@@ -98,8 +98,6 @@ public class CacheKey {
      */
     public static final String ENTERPRISE_SETTING_ENTERPRISE_ID_NAME = "cti-link.enterprise_setting.%d.name.%s";
 
-    public static final String ENTERPRISE_SETTING = "cti-link.enterprise_setting";
-
     public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%s";
 
     /**

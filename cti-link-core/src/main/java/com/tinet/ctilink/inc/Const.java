@@ -25,15 +25,6 @@ public class Const {
      * AGI配置
      */
     public static final int AGI_PORT = 4573;
-    public static final int AGI_SHELL_PORT = 4574;
-
-    /**
-     * radius配置
-     */
-    public static final int RADIUS_SERVER_AUTH = 0;
-    public static final int RADIUS_SERVER_AUTH_PORT=1812;
-    public static final int RADIUS_SERVER_ACCT = 1;
-    public static final int RADIUS_SERVER_ACCT_PORT = 1813;
 
 
     public static final String SOUNDS_MOH_ABS_PATH = "/var/nfs/ctilink/voices/moh/";
@@ -70,8 +61,6 @@ public class Const {
 
 
     // IVR模块通道变量名
-    /**通道变量:enterprise_status 企业目前业务状态*/
-    public static final String ENTERPRISE_CALL_LIMIT_IB = "enterprise_call_limit_ib";
 
     /**通道变量:is_ib_record */
     public static final String IS_RECORD = "is_record";
@@ -114,27 +103,11 @@ public class Const {
     /** 通道变量:is_restrict_check 是否设置了黑白名单 */
     public static final String IS_RESTRICT_CHECK = "is_restrict_check";
 
-    /** 通道变量:is_own_type 是否支持所属座席或所属队列 0不支持 1:所属座席 2:所属队列 */
-    public static final String IS_OWN_TYPE = "is_own_type";
-    /** 通道变量:如果is_own_type=2 呼入的号码属于的队列号 */
-    public static final String BELONG_QUEUE = "belong_queue";
-    /** 通道变量:如果is_own_type=3 呼入的号码属于的座席号 */
-    public static final String BELONG_CLIENT = "belong_client";
-
     /** 通道变量:cdr_customer_vip 来电是否是VIP */
     public static final String CDR_CUSTOMER_VIP = "cdr_customer_vip";
 
     /** 通道变量:cdr_customer_crm_id 来电客户对接crm_id */
     public static final String CDR_CUSTOMER_CRM_ID = "cdr_customer_crm_id";
-
-    /** 通道变量:is_call_failed_msg_send 未接来电短信提醒是否打开 */
-    public static final String IS_CALL_FAILED_MSG_SEND = "is_call_failed_msg_send";
-
-    /** 通道变量:is_call_success_msg_send 已接来电短信提醒是否打开 */
-    public static final String IS_CALL_SUCCESS_MSG_SEND = "is_call_success_msg_send";
-
-    /** 通道变量:is_tail_msg_send 尾巴短信是否打开 */
-    public static final String IS_TAIL_MSG_SEND = "is_tail_msg_send";
 
     /** 通道变量:is_tail_msg_send 尾巴短信是否打开 */
     public static final String OB_SMS_TAIL = "ob_sms_tail";
@@ -254,8 +227,6 @@ public class Const {
     /** 内部呼叫座席号 */
     public static final String PREVIEW_OUTCALL_INTERNAL_CALL_CNO = "preview_outcall_internal_call_cno";
 
-    /** 通道参数:predictive_outcall 对应底层dialplan中的context名称 */
-    public static final String PREDICTIVE_OUTCALL = "predictive_outcall";
     /** 获取座席loginStatus和DeviceStatus的变量 */
     public static final String AGENT_LOGIN_STATUS = "agent_login_status";
     public static final String AGENT_DEVICE_STATUS = "agent_device_status";
@@ -435,30 +406,7 @@ public class Const {
     /*
 	 * system_setting name definition
 	 */
-    public static final String SYSTEM_SETTING_NAME_ANTIHARASS_UNIT_TIME = "antiharass_unit_time";
-    public static final String SYSTEM_SETTING_NAME_LOCK_IP_TIME = "lock_ip_time";
-    public static final String SYSTEM_SETTING_NAME_LOCK_COOKIENAME_TIME = "lock_cookiename_time";
-    public static final String SYSTEM_SETTING_NAME_LOCK_TEL_TIME = "lock_tel_time";
-    public static final String SYSTEM_SETTING_NAME_LOCK_LOGIN_TIME = "lock_login_time";
-    public static final String SYSTEM_SETTING_NAME_CALL_FAILURE_MAX_TIMES = "call_failure_max_times";
-    public static final String SYSTEM_SETTING_NAME_CALL_MAX_TIMES = "call_max_times";
-    public static final String SYSTEM_SETTING_NAME_SMS_MAX_TIMES = "sms_max_times";
-    public static final String SYSTEM_SETTING_NAME_LOGIN_FAILED_WHEN_EMAIL_TIMES = "login_failed_when_email_times";
-    public static final String SYSTEM_SETTING_NAME_LOGIN_FAILED_FORBIDDEN_TIMES = "login_failed_forbidden_times";
-
-    /** 后台管理界面title设置 */
-    public static final String SYSTEM_SETTING_NAME_CCIC_JSP_TITLE = "ccic_jsp_title";
-    public static final String SYSTEM_SETTING_NAME_PREDICTIVE_BRIDGE_QUOTIETY = "predictive_bridge_quotiety";
-    public static final String SYSTEM_SETTING_NAME_PREDICTIVE_RING_QUOTIETY = "predictive_ring_quotiety";
-    public static final String SYSTEM_SETTING_NAME_PREDICTIVE_CHANNEL_LIMIT = "predictive_channel_limit";
-    public static final String SYSTEM_SETTING_NAME_PREDICTIVE_OUT_CALL_MODE = "predictive_out_call_mode";
-
     public static final String SYSTEM_SETTING_NAME_FAXC_URL = "faxc_url";
-    public static final String SYSTEM_SETTING_NAME_OUTBOUND_PROXY = "outbound_proxy";
-    public static final String SYSTEM_SETTING_NAME_RADIUS_SERVER_AUTH = "radius_server_auth";
-    public static final String SYSTEM_SETTING_NAME_RADIUS_SERVER_ACCT = "radius_server_acct";
-    public static final String SYSTEM_SETTING_NAME_INTERFACE_AUTH = "interface_auth";
-    public static final String SYSTEM_SETTING_NAME_AGI_SERVER_PORT = "agi_server_port";
 
     public static final String SYSTEM_SETTING_NAME_DEFAULT_ROUTER = "default_router";
     public static final String SYSTEM_SETTING_NAME_DEFAULT_AREA_CODE = "default_area_code";
@@ -466,59 +414,16 @@ public class Const {
     public static final String SYSTEM_SETTING_NAME_OB_CALL_REMEMBER_TIME = "ob_call_remember_time";
     public static final String SYSTEM_SETTING_NAME_AMI_RESPONSE_TIMEOUT = "ami_response_timeout";
 
-    public static final String SYSTEM_SETTING_NAME_BOSS_DB_INFO = "boss_db_info";
-    public static final String SYSTEM_SETTING_NAME_BOSS_URL_INFO = "boss_url_info";
-    public static final String SYSTEM_SETTING_NAME_BOSS_INTERFACE_URL = "boss_interface_url";
-    public static final String SYSTEM_SETTING_NAME_BOSS_CONN_POOL = "boss_conn_pool";
     public static final String SYSTEM_SETTING_NAME_SMS_URL = "sms_url";
     public static final String SYSTEM_SETTING_NAME_TIMED_TASK_EMAIL_ADDRESS = "timed_task_email_address";
-    public static final String SYSTEM_SETTING_NAME_MOD_AGI = "mod_agi";
-    public static final String SYSTEM_SETTING_NAME_MOD_AMI = "mod_ami";
-    public static final String SYSTEM_SETTING_NAME_MOD_RADIUS = "mod_radius";
-    public static final String SYSTEM_SETTING_NAME_MOD_WEBSOCKET = "mod_websocket";
-    public static final String SYSTEM_SETTING_NAME_MOD_SBC = "mod_sbc";
-    public static final String SYSTEM_SETTING_NAME_MONEY_CALL_ALERT_THRESHOLD = "money_call_alert_threshold";
-    /** mod_jbe监控管理器定义 */
-    public static final String SYSTEM_SETTING_NAME_MOD_MONITOR = "mod_monitor";
-    /** MOD_QUEUE定义 */
-    public static final String SYSTEM_SETTING_NAME_MOD_MONITOR_QUEUE = "mod_monitor_queue";
-    /** MOD_IVR定义 */
-    public static final String SYSTEM_SETTING_NAME_MOD_MONITOR_IVR = "mod_monitor_ivr";
-    /** 队列监控线程，10秒钟扫描一次数据 */
-    public static final int SYSTEM_SETTING_NAME_MOD_QUEUE_FREQUENCY = 30;
-    /** ivr监控线程，30秒钟扫描一次数据 */
-    public static final int SYSTEM_SETTING_NAME_MOD_IVR_FREQUENCY = 30;
-    /** 日程任务监控定义 */
-    public static final String SYSTEM_SETTING_NAME_MOD_AGENDA = "mod_agenda";
-    /** 日程任务监控线程，1分钟扫描一次数据 */
-    public static final int SYSTEM_SETTING_NAME_MOD_AGENDA_TIME = 60;
-    /** curl推送模块定义 */
-    public static final String SYSTEM_SETTING_NAME_MOD_CURL = "mod_curl";
-    /** 预测外呼模块 */
-    public static final String SYSTEM_SETTING_NAME_MOD_PREDICTIVE = "mod_predictive";
-    /** 预测外呼未接通话语音分析模块 */
-    public static final String SYSTEM_SETTING_NAME_MOD_SPEECH = "mod_speech";
     /** 预测外呼未接通话语音分析模块 */
     public static final String SYSTEM_SETTING_NAME_SPEECH_ENGINE = "speech_engine";
-    /** 语音识别科大讯飞地址 */
-    public static final String SYSTEM_SETTING_NAME_IFLYTEK_ICS = "iflytek_ics";
-    /** webcall引擎模块 */
-    public static final String SYSTEM_SETTING_NAME_MOD_WEBCALL = "mod_webcall";
     /** websocket server rtcweb breaker url */
     public static final String SYSTEM_SETTING_NAME_WEBRTC_WEBSOCKET_URL = "webrtc_websocket_url";
     /** websocket stun server url */
     public static final String SYSTEM_SETTING_NAME_WEBRTC_STUN_SERVER = "webrtc_stun_server";
-    /** 淘宝开发平台对接app参数 */
-    public static final String SYSTEM_SETTING_NAME_TAOBAO_APP = "taobao_app";
     /** 队列中座席接听电话，服务水平秒数 */
     public static final String SYSTEM_SETTING_NAME_SERVICE_LEVEL = "service_level";
-    /** 平台名称 */
-    public static final String SYSTEM_SETTING_CCIC2_PINGTAI_NAME = "ccic2_pingtai_name";
-
-    /** jbe ssh到cti的配置 */
-    // public static final String SYSTEM_SETTING_NAME_CTI_SSH_INFO =
-    // "cti_ssh_info";
-    public static final String SYSTEM_SETTING_NAME_AGI_SHELL_PORT = "agi_shell_port";
 
     /** 号码号段 */
     public static final String SYSTEM_SETTING_NAME_UNICOM_SEGMENT = "unicom_segment";
@@ -527,39 +432,7 @@ public class Const {
 
     /** 再次推送开关 */
     public static final String SYSTEM_SETTING_NAME_CURL_AGAIN = "curl_again";
-    /**
-     * 电话帮信息
-     */
-    public static final String SYSTEM_SETTING_NAME_DIANHUABANG_APIKEY = "dianhuabang_apikey";
-    public static final String SYSTEM_SETTING_NAME_DIANHUABANG_INTERFACE_URL = "dianhuabang_interface_url";
-    public static final String SYSTEM_SETTING_NAME_DIANHUABANG_INTERFACE_RESULT_URL = "dianhuabang_interface_result_url";
-    public static final String SYSTEM_SETTING_NAME_IVR_TO_DIANHUABANG = "ivr_to_dianhuabang";
-    /*
-     * system_setting name definition 数据过期时间
-     */
-    public static final String SYSTEM_SETTING_NAME_CDR_EXPIRE_MONTH = "cdr_expire_month";
-    public static final String SYSTEM_SETTING_NAME_CDR_SMS_EXPIRE_MONTH = "cdr_sms_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_ACTION_EXPIRE_MONTH = "log_action_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_CLIENT_EXPIRE_MONTH = "log_client_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_CRONTAB_EXPIRE_MONTH = "log_crontab_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_EMAIL_EXPIRE_MONTH = "log_email_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_LOGIN_EXPIRE_MONTH = "log_login_expire_month";
-    public static final String SYSTEM_SETTING_NAME_LOG_WEB400_CALL_EXPIRE_MONTH = "log_web400_call_expire_month";
-    public static final String SYSTEM_SETTING_NAME_REPORT_DAY_EXPIRE_MONTH = "report_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_REPORT_MONTH_EXPIRE_MONTH = "report_month_expire_month";
-    public static final String SYSTEM_SETTING_NAME_REPORT_WEEK_EXPIRE_MONTH = "report_week_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_CALL_IB_DAY_EXPIRE_MONTH = "statistic_call_ib_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_CALL_IB_DAY_AREA_EXPIRE_MONTH = "statistic_call_ib_day_area_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_CALL_OB_DAY_EXPIRE_MONTH = "statistic_call_ob_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_CLIENT_WORKLOAD_DAY_EXPIRE_MONTH = "statistic_client_workload_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_INVESTIGATION_DAY_EXPIRE_MONTH = "statistic_investigation_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_IVR_DAY_EXPIRE_MONTH = "statistic_ivr_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_QUEUE_HOUR_EXPIRE_MONTH = "statistic_queue_hour_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_SMS_DAY_EXPIRE_MONTH = "statistic_sms_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_STATISTIC_WEB400_DAY_EXPIRE_MONTH = "statistic_web400_day_expire_month";
-    public static final String SYSTEM_SETTING_NAME_WEB400_VISITOR_EXPIRE_MONTH = "web400_visitor_expire_month";
-    public static final String SYSTEM_SETTING_NAME_MONITOR_SERVER_EXPIRE_MONTH = "monitor_server_expire_month";
-    public static final String SYSTEM_SETTING_NAME_CASE_LIB_EXPIRE_MONTH = "case_lib_expire_month";
+
     public static final String SYSTEM_SETTING_NAME_TTSS_PROXY_URL = "tts_proxy_url";
 
 
@@ -841,63 +714,6 @@ public class Const {
     /*
 	 * enterprise enterprise_setting name definition
 	 */
-    /** 周月报发送类型 **/
-    public static final String ENTERPRISE_SETTING_NAME_SEND_TYPE = "send_type";
-    /** 周月报发送方式 **/
-    public static final String ENTERPRISE_SETTING_NAME_SEND_METHOD = "send_method";
-    /** 无使用量不发送 **/
-    public static final String ENTERPRISE_SETTING_NAME_SEND_WITHOUT_TRAFFIC = "send_without_traffic";
-    /** 接收周月报的手机号 **/
-    public static final String ENTERPRISE_SETTING_NAME_RECEIVE_MOBILE = "receive_mobile";
-    /** 接收尾巴短信和网上400短信留言手机号 **/
-    public static final String ENTERPRISE_SETTING_NAME_MSG_RECEIVE_MOBILE = "msg_receive_mobile";
-    /** 接收周月报的邮箱 **/
-    public static final String ENTERPRISE_SETTING_NAME_RECEIVE_MAIL = "receive_mail";
-    /** 短信业务代码标识 特服号码 短信小号 **/
-    public static final String ENTERPRISE_SETTING_NAME_SMS_CELL = "sms_cell";
-    /** 短信签名 **/
-    public static final String ENTERPRISE_SETTING_NAME_SMS_SIGN = "sms_sign";
-    /** 发送短信，本地错误码：000 **/
-    public static final String SMS_SEND_ERROR_CODE = "000";
-    /** is_tail_msg_send 尾巴短信是否打开 */
-    public static final String ENTERPRISE_SETTING_NAME_IS_TAIL_MSG_SEND = "is_tail_msg_send";
-
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_TAIL_MSG_SEND = "is_ob_tail_msg_send";
-    /** 未接短信内容 */
-    public static final String ENTERPRISE_SETTING_NAME_UN_SMS_TEXT = "us_sms_text";
-    /** 已接短信内容 */
-    public static final String ENTERPRISE_SETTING_NAME_OK_SMS_TEXT = "ok_sms_text";
-    /** 短信接收人 */
-    public static final String ENTERPRISE_SETTING_NAME_SMS_RECIPIENT = "sms_recipient";
-    /** is_call_failed_msg_send 未接来电短信提醒是否打开 */
-    public static final String ENTERPRISE_SETTING_NAME_IS_CALL_FAILED_MSG_SEND = "is_call_failed_msg_send";
-    /** is_call_success_msg_send 已接来电短信是否打开 */
-    public static final String ENTERPRISE_SETTING_NAME_IS_CALL_SUCCESS_MSG_SEND = "is_call_success_msg_send";
-    /** enterprise_test_expiry_date 测试账户使用有效日期 */
-    public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_TEST_EXPIRY_DATE = "enterprise_test_expiry_date";
-    /** 测试账户的使用状态 0-空闲 1-已用 **/
-    public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_TEST_STATUS = "enterprise_test_status";
-
-    /** customer_share_mode 企业客户权限管理模式 */
-    public static final String ENTERPRISE_SETTING_NAME_CUSTOMER_SHARE_MODE = "customer_share_mode";
-
-    /** fax_mail_address 企业接收电子传真的Email地址，多个之间使用英文逗号分隔 */
-    public static final String ENTERPRISE_SETTING_NAME_FAX_MAIL_ADDRESS = "fax_mail_address";
-
-    /** is_account_hand_mark 企业标记 */
-    public static final String ENTERPRISE_SETTING_NAME_IS_ACCOUNT_HAND_MARK = "is_account_hand_mark";
-
-    /** auto_investigation 企业是否开启自动满意度调查：0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION = "auto_investigation";
-
-    /** auto_investigation 企业是否开启呼入自动满意度调查：0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_IB = "auto_investigation_ib";
-
-    /** auto_investigation 企业是否开启外呼自动满意度调查：0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_OB = "auto_investigation_ob";
-
-    /** 队列监控设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_QUEUE_OBSERVER = "queue_observer";
     /** IVR监控设置 **/
     public static final String ENTERPRISE_SETTING_NAME_IVR_OBSERVER = "ivr_observer";
     /** 黑白名单设置 **/
@@ -907,153 +723,17 @@ public class Const {
 
     public static final String ENTERPRISE_SETTING_NAME_IS_CRBT_OPEN = "is_crbt_open"; //是否彩铃，对呼入有效
 
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_CRBT = "is_record_crbt";//是否彩铃录音
-
-    /** 呼入录音功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_IB = "is_record_ib";
-
-    /** 外呼录音功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_OB = "is_record_ob";
-
-    /** IVR录音功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_IVR = "is_record_ivr";
-
-    /** 来电记忆功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_REMEMBER_CALL = "is_remember_call";
-
-    /** 外呼记忆功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_OUT_REMEMBER_CALL = "is_out_remember_call";
-
-    /** 留言功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_VOICEMAIL = "is_voicemail";
-
-    /** 网上400功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_WEB400 = "is_web400";
-
-    /** 传真接收功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_FAX_RECEIVE = "is_fax_receive";
-
-    /** 短信发送功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_SMS_SEND = "is_sms_send";
-
-    /** 短信接收功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_SMS_RECEIVE = "is_sms_receive";
-
-    /** 即时通信功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_IM = "is_im";
-
-    /** 点击外呼功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_CLICK = "is_ob_click";
-
-    /** 主叫外呼功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_DIRECT = "is_ob_direct";
-
-    /** 预览外呼功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_PREVIEW = "is_ob_preview";
-
-    /** 预测外呼功能是否开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_PREDICTIVE = "is_ob_predictive";
-
-    public static final String ENTERPRISE_SETTING_NAME_OB_PREDICTIVE_WORK_TIME = "ob_predictive_work_time";
-
-    /** 座席退出时同时退出电话是否开启 0-关闭 1-开启* */
-    public static final String ENTERPRISE_SETTING_NAME_LOGOUT_WITH_TEL = "logout_with_tel";
-
-    /** 未接来电提示框是否开启 0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_OB_MISSED_CALL_ALERT = "ob_missed_call_alert";
-
-    /** 外呼二次确认是否开启 0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_OB_TWICE_CONFIRM = "ob_twice_confirm";
-
-    /** 最近电话信息是否开启 0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_LAST_TEL_INFO = "last_tel_info";
-
-    /** 座席登录是否自动登录电话 0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_AUTO_LOGIN_TEL = "auto_login_tel";
-
-    /** 座席前端是否隐藏客户号码 0-关闭 1-开启 **/
-    public static final String ENTERPRISE_SETTING_NAME_HIDDEN_TEL_NUMBER = "hidden_tel_number";
-    /** 座席前端队列状态面板 0-隐藏 1-显示 **/
-    public static final String ENTERPRISE_SETTING_NAME_QUEUE_STATUS_PANEL = "queue_status_panel";
-
-    /** 座席前端外呼任务面板 0-隐藏 1-显示 **/
-    public static final String ENTERPRISE_SETTING_NAME_OB_TASK_PANEL = "ob_task_panel";
-
-    /** 自定义置忙状态 **/
-    public static final String ENTERPRISE_SETTING_NAME_CUSTOM_BUSY_ACTIVE = "custom_busy_active";
-
-    /** CRM对接 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL = "crm_url";
-    /** CRM对接业务记录 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_BUSINESS_RECORD = "crm_url_business_record";
-    /** CRM对接客户管理 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_CUSTOMER = "crm_url_customer";
-    /** CRM对接弹屏 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_POPUP = "crm_url_popup";
     /** CRM对接弹屏自定义参数 **/
     public static final String ENTERPRISE_SETTING_NAME_CRM_URL_POPUP_USER_FIELD = "crm_url_popup_user_field";
-    /** CRM对接座席登陆 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_LOGIN = "crm_url_login";
-    /** CRM对接座席登陆自定义参数 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_LOGIN_USER_FIELD = "crm_url_login_user_field";
-    /** CRM对接座席退出 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_LOGOUT = "crm_url_logout";
-    /** CRM对接座席退出自定义参数 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_LOGOUT_USER_FIELD = "crm_url_logout_user_field";
-    /** CRM对接座席同步 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_CLIENTPUSH = "crm_url_clientpush";
-    /** CRM对接座席同步自定义参数 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_CLIENTPUSH_USER_FIELD = "crm_url_clientpush_user_field";
-    /** CRM对接是否弹出新窗口 **/
-    public static final String ENTERPRISE_SETTING_NAME_IS_ALERT_WINDOW = "is_alert_window";
-    /** 淘宝对接 */
-    public static final String ENTERPRISE_SETTING_NAME_TAOBAO_NICK = "taobao_nick";
-    /** 来电推送信息 value 0 关闭 1 开启 property url , timeout, retry, params 废弃 */
-    // public static final String ENTERPRISE_SETTING_NAME_RINGING_EVENT_PUSH =
-    // "event_push";
 
     /** 外呼号码状态识别选项 0 关闭 1开启 */
     public static final String ENTERPRISE_SETTING_NAME_TEL_STATUS_IDENTIFICATION = "tel_status_identification";
 
-    /** 预测外呼企业并发限制数 */
-    public static final String ENTERPRISE_SETTING_NAME_PREDICTIVE_CALL_LIMIT = "predictive_call_limit";
-    /** 预测外呼企业每并发单价 */
-    public static final String ENTERPRISE_SETTING_NAME_PREDICTIVE_CALL_FEE = "predictive_call_fee";
-    /** 接口秘钥 */
-    public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_SECRET = "enterprise_secret";
-
-    /** 接口token */
-    public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_TOKEN = "enterprise_token";
-
     // 网上400推送
     public static final String ENTERPRISE_SETTING_NAME_CRM_CURL_WEB400_STATUS = "crm_curl_web400_status";
 
-    // 是否开启彩铃
-    public static final String ENTERPRISE_SETTING_NAME_IS_CRBT = "is_crbt";
-    // 是否开启呼叫未接通录音
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD_TEL = "is_record_tel";
-
-    public static final String ENTERPRISE_SETTING_NAME_IS_IVR_LOCK = "is_ivr_lock";
-
-    /** 被叫呼叫限制 小时次数**/
-    public static final String ENTERPRISE_SETTING_NAME_CALLEE_CALL_LIMIT_HOUR = "callee_call_limit_hour";
-    /** 被叫呼叫限制 当天次数**/
-    public static final String ENTERPRISE_SETTING_NAME_CALLEE_CALL_LIMIT_DAY = "callee_call_limit_day";
     /** webcall默认ivr设置 **/
     public static final String ENTERPRISE_SETTING_NAME_WEBCALL_DEFAULT_IVR = "webcall_default_ivr";
-    /** webcall默认params设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_WEBCALL_DEFAULT_PARAMS = "webcall_default_params";
-    /** 访问ip白名单默认params设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_WHITELISTIP_SET = "ip_white_list";
-    /** 使用备用外显号码自动重试 **/
-    public static final String ENTERPRISE_SETTING_NAME_WEBCALL_RECALL_CLID_BAK = "webcall_recall_clid_bak";
-    /** 推送失败log自动重推 **/
-    public static final String ENTERPRISE_SETTING_NAME_CURL_RESEND = "curl_resend";
-
-    /** 企业并发限制数 */
-    public static final String ENTERPRISE_SETTING_NAME_OB_CALL_LIMIT = "ob_call_limit";
-    /** 企业并发限制数 */
-    public static final String ENTERPRISE_SETTING_NAME_IB_CALL_LIMIT = "ib_call_limit";
 
     public static final String ENTERPRISE_SETTING_NAME_CLID_LIST="clid_list";
 

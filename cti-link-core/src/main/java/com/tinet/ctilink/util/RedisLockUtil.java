@@ -3,7 +3,7 @@ package com.tinet.ctilink.util;
 import java.util.Collections;
 import java.util.UUID;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import com.tinet.ctilink.cache.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 
@@ -59,8 +59,7 @@ public class RedisLockUtil {
 		key = key + ".lock";
 		long timestamp = System.currentTimeMillis();
 		UUID uuid = UUID.randomUUID();
-		RedisTemplate<String, String> redisTemplate = (RedisTemplate<String, String>) ContextUtil
-				.getBean(RedisTemplate.class);
+		RedisTemplate redisTemplate =  ContextUtil.getBean(RedisTemplate.class);
 		while (tryLockTimeout == 0 || (System.currentTimeMillis() - timestamp) < tryLockTimeout) {
 			String result = redisTemplate.execute(scriptLock, redisTemplate.getStringSerializer(),redisTemplate.getStringSerializer(),Collections.singletonList(key),uuid.toString(),
 					String.valueOf(lockTimeout));
@@ -83,8 +82,7 @@ public class RedisLockUtil {
 	 * @param lock
 	 */
 	public static void unLock(RedisLock lock) {
-		RedisTemplate<String, String> redisTemplate = (RedisTemplate<String, String>) ContextUtil
-				.getBean(RedisTemplate.class);
+		RedisTemplate redisTemplate =  ContextUtil.getBean(RedisTemplate.class);
 		redisTemplate.execute(scriptUnlock,redisTemplate.getStringSerializer(),redisTemplate.getStringSerializer(), Collections.singletonList(lock.getKey()), lock.getUuid().toString());
 	}
 }
