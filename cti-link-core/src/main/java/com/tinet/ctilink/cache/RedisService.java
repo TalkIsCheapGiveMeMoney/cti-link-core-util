@@ -161,12 +161,6 @@ public class RedisService extends StringRedisTemplate {
         return true;
     }
 
-    //发布消息到Channel
-    public <T> Boolean convertAndSend(int dbIndex, String channel, T message) {
-        convertAndSend(channel, message);
-        return true;
-    }
-
     /**
      * TIME
      * Return the current server time
