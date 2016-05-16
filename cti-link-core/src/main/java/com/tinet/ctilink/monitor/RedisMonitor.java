@@ -2,8 +2,8 @@ package com.tinet.ctilink.monitor;
 
 import java.lang.reflect.Field;
 
+import com.tinet.ctilink.jedis.CtiLinkJedisConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.util.Pool;
@@ -17,7 +17,7 @@ import redis.clients.util.Pool;
 public class RedisMonitor {
 
 	@Autowired
-	private JedisConnectionFactory jedisConnectionFactory;
+	private CtiLinkJedisConnectionFactory jedisConnectionFactory;
 
 	private Pool<Jedis> pool;
 
@@ -64,7 +64,7 @@ public class RedisMonitor {
 		}
 
 		try {
-			Field field = JedisConnectionFactory.class.getDeclaredField("pool");
+			Field field = CtiLinkJedisConnectionFactory.class.getDeclaredField("pool");
 			field.setAccessible(true);
 			pool = (Pool<Jedis>) field.get(jedisConnectionFactory);
 		} catch (NoSuchFieldException e) {
