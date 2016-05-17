@@ -625,7 +625,7 @@ public class RedisService {
      */
     public Boolean hset(int dbIndex, String key, Object hashKey, Object value) {
         RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
-        redisTemplate.opsForHash().put(key, hashKey, value);
+        redisTemplate.opsForHash().put(key, hashKey, value.toString());
         return true;
     }
 
