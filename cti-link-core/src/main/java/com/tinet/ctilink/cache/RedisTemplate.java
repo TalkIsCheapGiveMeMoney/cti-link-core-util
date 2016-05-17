@@ -15,7 +15,7 @@ public class RedisTemplate extends StringRedisTemplate {
     @Override
     protected RedisConnection preProcessConnection(RedisConnection connection, boolean existingConnection) {
         try {
-            Integer dbIndex = RedisTemplate.LOCAL_DB_INDEX.get();
+            Integer dbIndex = LOCAL_DB_INDEX.get();
             //如果设置了dbIndex
             if (dbIndex != null) {
                 if (connection instanceof CtiLinkJedisConnection) {
@@ -31,7 +31,7 @@ public class RedisTemplate extends StringRedisTemplate {
                 connection.select(0);
             }
         } finally {
-            RedisTemplate.LOCAL_DB_INDEX.remove();
+            LOCAL_DB_INDEX.remove();
         }
         return super.preProcessConnection(connection, existingConnection);
     }

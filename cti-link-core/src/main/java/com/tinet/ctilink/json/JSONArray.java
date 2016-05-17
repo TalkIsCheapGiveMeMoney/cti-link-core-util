@@ -35,7 +35,7 @@ public class JSONArray extends ArrayList<Object> {
 			}else{
 				mapper.configure(Feature.ALLOW_SINGLE_QUOTES, true);
 				mapper.configure(Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-				json = json.replace("[{", "[{'").replace("=", "':'").replace(",", "','").replace("'[", "[").replace(" ", "");
+				json = json.replace("[{", "[{'").replace("}]", "'}]").replace("=", "':'").replace(",", "','").replace("'[", "[").replace(" ", "");
 				return mapper.readValue(json, JSONArray.class);
 			}
 		} catch (IOException e) {
