@@ -185,7 +185,13 @@ public class RedisService {
 
     //发布消息到Channel
     public <T> Boolean convertAndSend(String channel, T message) {
-        redisTemplate.convertAndSend(channel, message);
+        try {
+            String json = mapper.writeValueAsString(message);
+            redisTemplate.convertAndSend(channel, json);
+        } catch (JsonProcessingException e) {
+            logger.error("RedisService.convertAndSend error, channel=" + channel + " message=" + message, e);
+        }
+
         return true;
     }
 
@@ -486,14 +492,15 @@ public class RedisService {
         T t = null;
         try {
             RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
-            String value = redisTemplate.opsForHash().get(key, hashKey).toString();
-            if (StringUtils.isEmpty(value)) {
+
+            Object value = redisTemplate.opsForHash().get(key, hashKey);
+            if (value == null || StringUtils.isEmpty(value.toString())) {
                 return null;
             }
 
-            t = mapper.readValue(value, clazz);
+            t = mapper.readValue(value.toString(), clazz);
         } catch (Exception e) {
-            logger.error("RedisService.get error", e);
+            logger.error("RedisService.hget error", e);
         }
         return t;
     }
