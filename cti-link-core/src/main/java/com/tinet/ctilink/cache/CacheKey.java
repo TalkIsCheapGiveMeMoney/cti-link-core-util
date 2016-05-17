@@ -138,6 +138,11 @@ public class CacheKey {
     public static final String ENTERPRISE_IVR_ENTERPRISE_ID_IVR_ID = "cti-link.enterprise_ivr.%d.ivr_id.%d";
 
     /**
+     * enterprise_ivr  <1000
+     */
+    public static final String ENTERPRISE_IVR_ANCHOR_ENTERPRISE_ID_IVR_ID = "cti-link.enterprise_ivr_anchor.%d.ivr_id.%d";
+
+    /**
      * enterprise_ivr_router  <1000
      */
     public static final String ENTERPRISE_IVR_ROUTER_ENTERPRISE_ID = "cti-link.enterprise_ivr_router.%d";
