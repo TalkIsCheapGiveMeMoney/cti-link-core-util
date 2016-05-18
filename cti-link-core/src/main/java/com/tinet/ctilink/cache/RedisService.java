@@ -1,9 +1,13 @@
 package com.tinet.ctilink.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinet.ctilink.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,11 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisZSetCommands;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tinet.ctilink.json.JSONObject;
 
 /**
  * @author fengwei //
@@ -630,10 +639,17 @@ public class RedisService {
      * @param value
      * @return
      */
-    public Boolean hset(int dbIndex, String key, Object hashKey, Object value) {
-        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
-        redisTemplate.opsForHash().put(key, hashKey, value.toString());
-        return true;
+    public <T> Boolean hset(int dbIndex, String key, Object hashKey, T t) {
+    	boolean result = true;
+    	try{
+	        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+	        String json = mapper.writeValueAsString(t);
+	        redisTemplate.opsForHash().put(key, hashKey, json);
+    	} catch (JsonProcessingException e) {
+            logger.error("RedisService.set error, key=" + key + " value=" + t, e);
+            result = false;
+        }
+    	return result;
     }
 
     /**
