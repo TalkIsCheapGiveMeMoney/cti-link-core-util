@@ -736,6 +736,8 @@ public class Const {
     public static final String ENTERPRISE_SETTING_NAME_WEBCALL_DEFAULT_IVR = "webcall_default_ivr";
 
     public static final String ENTERPRISE_SETTING_NAME_CLID_LIST="clid_list";
+    
+    public static final String ENTERPRISE_SETTING_NAME_IB_CALL_REMEMBER_TIME = "ib_call_remember_time";
 
     public static final String UNKNOWN_NUMBER = "unknown_number";
     public static final String UNKNOWN_AREA = "unknown_area";
