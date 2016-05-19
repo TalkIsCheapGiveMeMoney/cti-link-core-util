@@ -49,6 +49,31 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 		}
 	}
 
+	public static String getJSONString(Object object) {
+		if (object instanceof String) {
+			return object.toString();
+		}
+		try {
+			return mapper.writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static <T> T getBean(String json, Class<T> c) {
+		if (json == null) {
+			return null;
+		}
+		T t = null;
+		try {
+			t = mapper.readValue(json, c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return t;
+	}
+
 	public JSONObject getJSONObject(String key) {
 		return mapper.convertValue(super.get(key), JSONObject.class);
 	}

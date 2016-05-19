@@ -195,6 +195,16 @@ public class RedisService {
         return true;
     }
 
+    public <T> T execute(int dbIndex, SessionCallback<T> session) {
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.execute(session);
+    }
+
+    public <T> T execute(int dbIndex, RedisCallback<T> redisCallback) {
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.execute(redisCallback);
+    }
+
     /**
      * TIME
      * Return the current server time
