@@ -634,9 +634,10 @@ public class Const {
      * clid type
      */
     public static final int ROUTER_CLID_CALL_TYPE_IB_RIGHT = 1;
-    public static final int ROUTER_CLID_CALL_TYPE_OB_LEFT = 2;
-    public static final int ROUTER_CLID_CALL_TYPE_OB_RIGHT = 3;
-
+	public static final int ROUTER_CLID_CALL_TYPE_PREVIEW_OB_LEFT = 2;
+	public static final int ROUTER_CLID_CALL_TYPE_PREVIEW_OB_RIGHT = 3;
+	public static final int ROUTER_CLID_CALL_TYPE_PREDICTIVE_OB_LEFT = 4;
+	public static final int ROUTER_CLID_CALL_TYPE_PREDICTIVE_OB_RIGHT = 5;
 
     /** CURL 推送类型 */
     public static final Integer CURL_TYPE_HANGUP_IB = 1; // 来电挂机推送
