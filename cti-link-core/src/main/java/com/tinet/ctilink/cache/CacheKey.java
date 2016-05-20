@@ -70,6 +70,8 @@ public class CacheKey {
      */
     public static final String TRUNK_NUMBER_TRUNK = "cti-link.trunk.number_trunk.%s";
 
+    public static final String TRUNK_ENTERPRISE_ID = "cti-link.trunk.enterprise_id.%d";
+
     public static final String TRUNK_ENTERPRISE_ID_FIRST = "cti-link.trunk.%s.first";
 
     /**
