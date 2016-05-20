@@ -1,9 +1,7 @@
 # cti-link-core-util
 
-
 如果使用redisService，需要在spring-core.xml中配置：
-
-   <!-- 定义Redis连接池 -->
+    <!-- 定义Redis连接池 -->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="20" />
         <property name="maxIdle" value="20" />
@@ -24,3 +22,17 @@
     </bean>
 
     <bean id="redisService" class="com.tinet.ctilink.cache.RedisService" />
+
+
+使用redisTaskScheduler
+
+	<bean id="redisClock" class="com.tinet.ctilink.scheduler.clock.RedisClock">
+		<property name="redisService" ref="redisService" />
+	</bean>
+	<bean id="redisTaskScheduler" class="com.tinet.ctilink.scheduler.RedisTaskScheduler">
+		<property name="redisService" ref="redisService"/>
+		<property name="pollingDelayMillis" value="100"/>
+		<property name="maxRetriesOnConnectionFailure" value="3"/>
+		<property name="clock" ref="redisClock" />
+		<property name="schedulerName" value="bigQueueScheduler"/>
+	</bean>

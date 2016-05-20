@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 public class RedisTemplate extends StringRedisTemplate {
     public static ThreadLocal<Integer> LOCAL_DB_INDEX = new ThreadLocal<>();
 
-    //
     @Override
     protected RedisConnection preProcessConnection(RedisConnection connection, boolean existingConnection) {
         try {
@@ -27,12 +26,11 @@ public class RedisTemplate extends StringRedisTemplate {
                 } else {
                     connection.select(dbIndex);
                 }
-            } else {
-                connection.select(0);
             }
         } finally {
             LOCAL_DB_INDEX.remove();
         }
+
         return super.preProcessConnection(connection, existingConnection);
     }
 }
