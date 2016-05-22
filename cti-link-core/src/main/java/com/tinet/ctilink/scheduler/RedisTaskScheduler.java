@@ -214,11 +214,15 @@ public class RedisTaskScheduler {
             } else {
                 pool = timedPools.get(schedulerTask.getGroupName());
             }
-            pool.submit(() -> {
-                    TaskSchedulerTrigger taskSchedulerTrigger =
-                            (TaskSchedulerTrigger) ContextUtil.getContext().getBean(schedulerTask.getTaskTriggerName());
-                    taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId());
-            });
+            if (pool != null) {
+                pool.submit(() -> {
+                        TaskSchedulerTrigger taskSchedulerTrigger =
+                                (TaskSchedulerTrigger) ContextUtil.getContext().getBean(schedulerTask.getTaskTriggerName());
+                        taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId());
+                });
+            } else {
+                log.error("pool is null, schedulerTask:" + schedulerTask);
+            }
         } catch (Exception e) {
             log.error(String.format("[%s] Error during execution of schedulerTask [%s]", schedulerName, schedulerTask.getTaskId()), e);
         }
