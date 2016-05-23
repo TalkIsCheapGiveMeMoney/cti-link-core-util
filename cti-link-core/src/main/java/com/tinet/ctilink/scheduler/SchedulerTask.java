@@ -2,6 +2,8 @@ package com.tinet.ctilink.scheduler;
 
 import com.tinet.ctilink.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * @author fengwei //
  * @date 16/5/19 10:26
@@ -17,6 +19,8 @@ class SchedulerTask {
     //任务
     private String taskTriggerName;
 
+    private Map taskTriggerParam;
+
     //periodic
     private int period;
 
@@ -25,17 +29,19 @@ class SchedulerTask {
 
     public SchedulerTask() {}
 
-    public SchedulerTask(String taskId, String taskTriggerName, int period) {
+    public SchedulerTask(String taskId, String taskTriggerName, Map taskTriggerParam, int period) {
         this.taskId = taskId;
         this.taskTriggerName = taskTriggerName;
         this.period = period;
+        this.taskTriggerParam = taskTriggerParam;
         this.taskType = TASK_TYPE_PERIODIC;
     }
 
-    public SchedulerTask(String groupName, String taskId, String taskTriggerName) {
+    public SchedulerTask(String groupName, String taskId, String taskTriggerName, Map taskTriggerParam) {
         this.taskId = taskId;
         this.taskTriggerName = taskTriggerName;
         this.groupName = groupName;
+        this.taskTriggerParam = taskTriggerParam;
         this.taskType = TASK_TYPE_TIMED;
     }
 
@@ -61,6 +67,14 @@ class SchedulerTask {
 
     public void setTaskTriggerName(String taskTriggerName) {
         this.taskTriggerName = taskTriggerName;
+    }
+
+    public Map getTaskTriggerParam() {
+        return taskTriggerParam;
+    }
+
+    public void setTaskTriggerParam(Map taskTriggerParam) {
+        this.taskTriggerParam = taskTriggerParam;
     }
 
     public int getPeriod() {

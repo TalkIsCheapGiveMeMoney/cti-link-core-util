@@ -61,8 +61,8 @@ public class RedisTaskScheduler {
      * @param period  周期, 毫秒
      * @param threadCount 任务的执行线程数
      */
-    public void schedulePeriod(String taskId, String taskTriggerName, int period, int threadCount) {
-        String taskJson = new SchedulerTask(taskId, taskTriggerName, period).toString();
+    public void schedulePeriod(String taskId, String taskTriggerName, Map taskTriggerParam, int period, int threadCount) {
+        String taskJson = new SchedulerTask(taskId, taskTriggerName, taskTriggerParam, period).toString();
         //创建周期性任务
         redisService.zadd(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson, clock.now().getTimeInMillis() + period);
         //初始化线程池
@@ -91,12 +91,12 @@ public class RedisTaskScheduler {
      * @param taskTriggerName  回调的trigger
      * @param time 执行时间, 精确到毫秒
      */
-    public void scheduleTimed(String groupName, String taskId, String taskTriggerName, long time) {
+    public void scheduleTimed(String groupName, String taskId, String taskTriggerName, Map taskTriggerParam, long time) {
         TaskSchedulerGroup taskSchedulerGroup = getTaskSchedulerGroup(groupName);
         if (taskSchedulerGroup == null) {
             throw new RuntimeException("schedulerTask scheduler group not exist");
         }
-        String taskJson = new SchedulerTask(groupName, taskId, taskTriggerName).toString();
+        String taskJson = new SchedulerTask(groupName, taskId, taskTriggerName, taskTriggerParam).toString();
         //创建定时任务
         redisService.zadd(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson, time);
     }
@@ -214,11 +214,15 @@ public class RedisTaskScheduler {
             } else {
                 pool = timedPools.get(schedulerTask.getGroupName());
             }
-            pool.submit(() -> {
-                    TaskSchedulerTrigger taskSchedulerTrigger =
-                            (TaskSchedulerTrigger) ContextUtil.getContext().getBean(schedulerTask.getTaskTriggerName());
-                    taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId());
-            });
+            if (pool != null) {
+                pool.submit(() -> {
+                        TaskSchedulerTrigger taskSchedulerTrigger =
+                                (TaskSchedulerTrigger) ContextUtil.getContext().getBean(schedulerTask.getTaskTriggerName());
+                        taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId(), schedulerTask.getTaskTriggerParam());
+                });
+            } else {
+                log.error("pool is null, schedulerTask:" + schedulerTask);
+            }
         } catch (Exception e) {
             log.error(String.format("[%s] Error during execution of schedulerTask [%s]", schedulerName, schedulerTask.getTaskId()), e);
         }
