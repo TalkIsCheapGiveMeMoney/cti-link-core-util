@@ -3,12 +3,14 @@ package com.tinet.ctilink.util;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Jiangsl
  *
  */
+@Order(1)
 public class ContextUtil implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static ApplicationContext applicationContext;
