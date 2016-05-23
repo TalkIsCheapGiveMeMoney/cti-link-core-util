@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  * @author Jiangsl
  *
  */
-@Component
 public class ContextUtil implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static ApplicationContext applicationContext;
