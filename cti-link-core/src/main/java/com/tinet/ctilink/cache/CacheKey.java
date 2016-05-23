@@ -39,7 +39,7 @@ public class CacheKey {
      */
     public static final String GATEWAY = "cti-link.gateway";
 
-    public static final String GATEWAY_NAME = "cti-link.gateway.name.%s";
+    public static final String GATEWAY_ID = "cti-link.gateway.id.%d";
 
     /**
      * system_setting  <1000

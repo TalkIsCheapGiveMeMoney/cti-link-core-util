@@ -766,4 +766,12 @@ public class Const {
     public static final int ENTERPRISE_IVR_ROUTER_TYPE_EXTEN = 3;
 
 
+	public static final String OBJECT_TYPE_TEL="0";
+	public static final String OBJECT_TYPE_CNO="1";
+	public static final String OBJECT_TYPE_EXTEN="2";
+	public static final String OBJECT_TYPE_IVR_NODE="3";
+	public static final String OBJECT_TYPE_IVR_ID="4";
+	
+	public static final int ROUTER_TYPE_PREFIX = 1;
+	public static final int ROUTER_TYPE_INTERNAL = 2;
 }
