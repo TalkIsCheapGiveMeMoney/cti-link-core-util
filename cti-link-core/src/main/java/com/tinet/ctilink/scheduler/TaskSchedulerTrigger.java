@@ -7,5 +7,5 @@ import java.util.Map;
  * @date 16/5/19 13:04
  */
 public interface TaskSchedulerTrigger {
-    void taskTriggered(String taskId, Map param);
+    void taskTriggered(String taskId, Map<String, Object> param);
 }
