@@ -65,6 +65,12 @@ public class RedisService {
         return true;
     }
 
+    public Boolean expire(int dbIndex, String key, long timeout, TimeUnit unit) {
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        redisTemplate.expire(key, timeout, unit);
+        return true;
+    }
+
     public <T> Boolean set(int dbIndex, String key, T t) {
         boolean result = true;
         try {
