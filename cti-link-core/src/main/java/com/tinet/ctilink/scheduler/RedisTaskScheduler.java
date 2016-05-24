@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,6 +26,8 @@ public class RedisTaskScheduler {
     private static final String DEFAULT_SCHEDULER_NAME = "redisTaskScheduler";
     private Map<String, ExecutorService> timedPools = new ConcurrentHashMap<>();
     private Map<String, ExecutorService> periodicPools = new ConcurrentHashMap<>();
+
+    private Map<String, String> periodicTasks = new ConcurrentHashMap<>();
 
     /**
      * clock
@@ -68,6 +68,7 @@ public class RedisTaskScheduler {
         //初始化线程池
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         periodicPools.put(taskId, executorService);
+        periodicTasks.put(taskId, taskJson);
     }
 
     /**
@@ -103,7 +104,28 @@ public class RedisTaskScheduler {
 
     @SuppressWarnings("unchecked")
     public void unschedule(String taskId) {
-        redisService.zrem(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskId);
+        if (periodicTasks.containsKey(taskId)) {
+            redisService.zrem(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), periodicTasks.get(taskId));
+        } else {
+            String pattern = "{\"taskId\":\"" + taskId + "\",*";
+            ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
+
+            Cursor<ZSetOperations.TypedTuple<String>> cursor
+                    = redisService.zscan(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), scanOptions);
+            try {
+                while (cursor.hasNext()) {
+                    ZSetOperations.TypedTuple<String> stringTypedTuple = cursor.next();
+                    String taskJson = stringTypedTuple.getValue();
+                    SchedulerTask schedulerTask = JSONObject.getBean(taskJson, SchedulerTask.class);
+                    if (schedulerTask.getTaskId().equals(taskId)) {
+                        redisService.zrem(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson);
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                log.error("unschedule error, taskId:" + taskId, e);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -125,6 +147,14 @@ public class RedisTaskScheduler {
     public void destroy() {
         if (pollingThread != null) {
             pollingThread.requestStop();
+        }
+        //关闭线程池
+        for (Map.Entry<String, ExecutorService> entry : periodicPools.entrySet()) {
+           entry.getValue().shutdown();
+        }
+
+        for (Map.Entry<String, ExecutorService> entry : timedPools.entrySet()) {
+            entry.getValue().shutdown();
         }
     }
 
@@ -189,7 +219,7 @@ public class RedisTaskScheduler {
                             }
 
                             log.debug(String.format("[%s] Triggering execution of schedulerTask [%s]", schedulerName, taskJson));
-                            tryTaskExecution(schedulerTask);
+                            tryTaskExecution(taskJson, schedulerTask, redisOperations);
                         }
 
                         taskWasTriggered = true;
@@ -205,12 +235,11 @@ public class RedisTaskScheduler {
     }
 
 
-    private void tryTaskExecution(SchedulerTask schedulerTask) {
+    private void tryTaskExecution(String taskJson, SchedulerTask schedulerTask, RedisOperations redisOperations) {
         ExecutorService pool;
         try {
             if (schedulerTask.getTaskType() == SchedulerTask.TASK_TYPE_PERIODIC) {
                 pool = periodicPools.get(schedulerTask.getTaskId());
-
             } else {
                 pool = timedPools.get(schedulerTask.getGroupName());
             }
@@ -221,6 +250,8 @@ public class RedisTaskScheduler {
                         taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId(), schedulerTask.getTaskTriggerParam());
                 });
             } else {
+                //删除任务
+                redisOperations.opsForZSet().remove(keyForScheduler(), taskJson);
                 log.error("pool is null, schedulerTask:" + schedulerTask);
             }
         } catch (Exception e) {
