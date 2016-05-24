@@ -252,7 +252,7 @@ public class RedisTaskScheduler {
             } else {
                 //删除任务
                 redisOperations.opsForZSet().remove(keyForScheduler(), taskJson);
-                log.error("pool is null, schedulerTask:" + schedulerTask);
+                log.error("pool is null, remove task, taskId:" + schedulerTask.getTaskId());
             }
         } catch (Exception e) {
             log.error(String.format("[%s] Error during execution of schedulerTask [%s]", schedulerName, schedulerTask.getTaskId()), e);
