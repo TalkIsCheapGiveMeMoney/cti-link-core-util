@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 使用Jackson构造的json-lib适配器，以为了在不修改原有实现的基础上替换掉json-lib的JSONObject
@@ -101,15 +102,27 @@ public class JSONObject extends LinkedHashMap<String, Object> {
 	}
 
 	public String getString(String key) {
-		return super.get(key).toString();
+		Object object = super.get(key);
+		if (object == null) {
+			return null;
+		}
+		return object.toString();
 	}
 
 	public int getInt(String key) {
-		return Integer.parseInt(super.get(key).toString());
+		Object object = super.get(key);
+		if (object == null || !StringUtils.isNumeric(object.toString())) {
+			return -1;
+		}
+		return Integer.parseInt(object.toString());
 	}
 
 	public boolean getBoolean(String key) {
-		return Boolean.parseBoolean(super.get(key).toString());
+		Object object = super.get(key);
+		if (object == null) {
+			return false;
+		}
+		return Boolean.parseBoolean(object.toString());
 	}
 
 	@Override
