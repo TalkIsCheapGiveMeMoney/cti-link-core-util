@@ -299,7 +299,8 @@ public class Const {
     public static final int CDR_CALL_TYPE_OB_WHISPER = 206; // 外呼的被三方通话
     public static final int CDR_CALL_TYPE_OB_BARGE = 207; // 外呼的被拦截
     public static final int CDR_CALL_TYPE_CALL_CUSTOMER = 208; // 点击外呼，预览外呼，直接外呼的呼叫客户
-
+    public static final int CDR_CALL_TYPE_OB_PICKUP = 209; //预测外呼，webcall外呼抢线
+    
     public static final int CDR_STATUS_IB_CLIENT_ANSWER = 1;// 座席接听
     public static final int CDR_STATUS_IB_CLIENT_NO_ANSWER = 2;// 座席未接听
     public static final int CDR_STATUS_IB_SYSTEM_ANSWER = 3;// 系统接听
