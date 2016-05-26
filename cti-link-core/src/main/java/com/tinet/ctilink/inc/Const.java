@@ -789,4 +789,9 @@ public class Const {
 	
 	public static final int ROUTER_TYPE_PREFIX = 1;
 	public static final int ROUTER_TYPE_INTERNAL = 2;
+	
+	public static final int CLIENT_CALL_POWER_ALL=0;
+	public static final int CLIENT_CALL_POWER_NATIONAL=1;
+	public static final int CLIENT_CALL_POWER_LOCAL=2;
+	public static final int CLIENT_CALL_POWER_INTERNAL=3;
 }
