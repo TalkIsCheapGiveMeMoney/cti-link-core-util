@@ -746,6 +746,15 @@ public class Const {
     
     public static final String ENTERPRISE_SETTING_NAME_IB_CALL_REMEMBER_TIME = "ib_call_remember_time";
 
+	/**auto_investigation 企业是否开启自动满意度调查：0-关闭  1-开启 **/
+	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION = "auto_investigation";
+	
+	/**auto_investigation 企业是否开启呼入自动满意度调查：0-关闭  1-开启 **/
+	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_IB = "auto_investigation_ib";
+	
+	/**auto_investigation 企业是否开启外呼自动满意度调查：0-关闭  1-开启 **/
+	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_OB = "auto_investigation_ob";
+	
     public static final String UNKNOWN_NUMBER = "unknown_number";
     public static final String UNKNOWN_AREA = "unknown_area";
 
