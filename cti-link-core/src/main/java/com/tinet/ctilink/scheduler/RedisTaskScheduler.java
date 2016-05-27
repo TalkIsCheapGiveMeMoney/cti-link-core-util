@@ -36,6 +36,8 @@ public class RedisTaskScheduler {
 
     private RedisService redisService;
 
+    private int dbIndex = Const.REDIS_DB_CTI_INDEX;
+
     //多实例, 必须都注册
     private Map<String, TaskSchedulerGroup> taskSchedulerGroupMap = new ConcurrentHashMap<>();
 
@@ -64,7 +66,7 @@ public class RedisTaskScheduler {
     public void schedulePeriod(String taskId, String taskTriggerName, Map taskTriggerParam, int period, int threadCount) {
         String taskJson = new SchedulerTask(taskId, taskTriggerName, taskTriggerParam, period).toString();
         //创建周期性任务
-        redisService.zadd(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson, clock.now().getTimeInMillis() + period);
+        redisService.zadd(dbIndex, keyForScheduler(), taskJson, clock.now().getTimeInMillis() + period);
         //初始化线程池
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         periodicPools.put(taskId, executorService);
@@ -99,26 +101,26 @@ public class RedisTaskScheduler {
         }
         String taskJson = new SchedulerTask(groupName, taskId, taskTriggerName, taskTriggerParam).toString();
         //创建定时任务
-        redisService.zadd(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson, time);
+        redisService.zadd(dbIndex, keyForScheduler(), taskJson, time);
     }
 
     @SuppressWarnings("unchecked")
     public void unschedule(String taskId) {
         if (periodicTasks.containsKey(taskId)) {
-            redisService.zrem(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), periodicTasks.get(taskId));
+            redisService.zrem(dbIndex, keyForScheduler(), periodicTasks.get(taskId));
         } else {
             String pattern = "{\"taskId\":\"" + taskId + "\",*";
             ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).build();
 
             Cursor<ZSetOperations.TypedTuple<String>> cursor
-                    = redisService.zscan(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), scanOptions);
+                    = redisService.zscan(dbIndex, keyForScheduler(), scanOptions);
             try {
                 while (cursor.hasNext()) {
                     ZSetOperations.TypedTuple<String> stringTypedTuple = cursor.next();
                     String taskJson = stringTypedTuple.getValue();
                     SchedulerTask schedulerTask = JSONObject.getBean(taskJson, SchedulerTask.class);
                     if (schedulerTask.getTaskId().equals(taskId)) {
-                        redisService.zrem(Const.REDIS_DB_CTI_INDEX, keyForScheduler(), taskJson);
+                        redisService.zrem(dbIndex, keyForScheduler(), taskJson);
                         return;
                     }
                 }
@@ -130,7 +132,7 @@ public class RedisTaskScheduler {
 
     @SuppressWarnings("unchecked")
     public void unscheduleAllTasks() {
-        redisService.delete(Const.REDIS_DB_CTI_INDEX, keyForScheduler());
+        redisService.delete(dbIndex, keyForScheduler());
     }
 
     @PostConstruct
@@ -166,6 +168,10 @@ public class RedisTaskScheduler {
         this.redisService = redisService;
     }
 
+    public void setDbIndex(int dbIndex) {
+        this.dbIndex = dbIndex;
+    }
+
     public void setSchedulerName(String schedulerName) {
         this.schedulerName = schedulerName;
     }
@@ -189,7 +195,7 @@ public class RedisTaskScheduler {
     @SuppressWarnings("unchecked")
     private boolean triggerNextTaskIfFound() {
 
-        return (Boolean) redisService.execute(Const.REDIS_DB_CTI_INDEX, new SessionCallback() {
+        return (Boolean) redisService.execute(dbIndex, new SessionCallback() {
             @Override
             public Object execute(RedisOperations redisOperations) throws DataAccessException {
                 boolean taskWasTriggered = false;
@@ -245,9 +251,13 @@ public class RedisTaskScheduler {
             }
             if (pool != null) {
                 pool.submit(() -> {
+                    try {
                         TaskSchedulerTrigger taskSchedulerTrigger =
                                 (TaskSchedulerTrigger) ContextUtil.getContext().getBean(schedulerTask.getTaskTriggerName());
                         taskSchedulerTrigger.taskTriggered(schedulerTask.getTaskId(), schedulerTask.getTaskTriggerParam());
+                    } catch (Exception e) {
+                        log.error(String.format("[%s] Error during execution of schedulerTask [%s]", schedulerName, schedulerTask.getTaskId()), e);
+                    }
                 });
             } else {
                 //删除任务

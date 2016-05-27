@@ -10,7 +10,7 @@ import com.tinet.ctilink.mapper.BaseMapper;
  * @author Jiangsl
  *
  */
-public class BaseService<T> {
+public class BaseService<T>  {
 
 	@Autowired
 	protected BaseMapper<T> mapper;

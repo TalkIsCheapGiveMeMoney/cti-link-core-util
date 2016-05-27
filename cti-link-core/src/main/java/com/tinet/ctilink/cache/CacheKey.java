@@ -20,7 +20,7 @@ public class CacheKey {
 
     public static final String SIP_MEDIA_SERVER_ID = "cti-link.sip_media_server.id.%d";
 
-    public static final String SIP_MEDIA_SERVER = "cit-link.sip_media_server";
+    public static final String SIP_MEDIA_SERVER = "cti-link.sip_media_server";
 
     /**
      * sip_proxy  <1000
