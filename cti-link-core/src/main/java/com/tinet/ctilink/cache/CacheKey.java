@@ -219,5 +219,8 @@ public class CacheKey {
      */
     public static final String QUEUE_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.queue_skill.%d.agent_id.%d";
     
-    
+    /**
+     * 
+     */
+    public static final String EXTEN_ENTERPRISE_ID_EXTEN = "cti-link.exten.%d.exten.%s";
 }
