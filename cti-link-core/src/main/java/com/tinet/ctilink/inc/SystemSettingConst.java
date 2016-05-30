@@ -8,6 +8,7 @@ public class SystemSettingConst {
     /*
      * system_setting property definition
      */
+    public static final String SYSTEM_SETTING_PROPERTY_DAY = "day";
     public static final String SYSTEM_SETTING_PROPERTY_HOUR = "hour";
     public static final String SYSTEM_SETTING_PROPERTY_MINUTE = "minute";
     public static final String SYSTEM_SETTING_PROPERTY_SECOND = "second";
@@ -41,5 +42,9 @@ public class SystemSettingConst {
     public static final String SYSTEM_SETTING_NAME_CURL_AGAIN = "curl_again";
 
     public static final String SYSTEM_SETTING_NAME_TTSS_PROXY_URL = "tts_proxy_url";
+
+    public static final String SYSTEM_SETTING_NAME_CONTROL_API_MAX_REQUEST_COUNT = "control_api_max_request_count";
+
+    public static final String SYSTEM_SETTING_NAME_CONTROL_API_WHITE_IP_LIST = "control_api_white_ip_list";
 
 }
