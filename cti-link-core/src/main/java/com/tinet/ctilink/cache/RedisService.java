@@ -71,6 +71,16 @@ public class RedisService {
         return true;
     }
 
+    public Long ttl(int dbIndex, String key) {
+        RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.ttl(((RedisSerializer<String>) redisTemplate.getKeySerializer()).serialize(key));
+            }
+        });
+    }
+
     public <T> Boolean set(int dbIndex, String key, T t) {
         boolean result = true;
         try {
@@ -193,10 +203,9 @@ public class RedisService {
         });
     }
 
-    public Boolean incrby(int dbIndex, String key, long delta) {
+    public Long incrby(int dbIndex, String key, long delta) {
         RedisTemplate.LOCAL_DB_INDEX.set(dbIndex);
-        redisTemplate.opsForValue().increment(key, delta);
-        return true;
+        return redisTemplate.opsForValue().increment(key, delta);
     }
 
     //发布消息到Channel

@@ -8,6 +8,7 @@ package com.tinet.ctilink.cache;
  */
 public class CacheKey {
 
+    //****** DB  1   ********
     /**
      * sip_group  <5
      */
@@ -223,4 +224,9 @@ public class CacheKey {
      * 
      */
     public static final String EXTEN_ENTERPRISE_ID_EXTEN = "cti-link.exten.%d.exten.%s";
+
+
+
+    //****** DB  6   ********
+    public static final String CONTROL_API_REQUEST_COUNT = "cti-link-control-api.request.count";
 }
