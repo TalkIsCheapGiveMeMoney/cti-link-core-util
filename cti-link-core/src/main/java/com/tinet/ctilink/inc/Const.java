@@ -619,6 +619,7 @@ public class Const {
     public static final String DIALPLAN_CONTEXT_WEB400 = "web400";
     public static final String DIALPLAN_CONTEXT_WEB400_PUSH = "web400_push";
     public static final String DIALPLAN_CONTEXT_WEB400_NOPUSH = "web400_nopush";
+    public static final String DIALPLAN_CONTEXT_PREVIEW_OUTCALL_PREDIAL = "agent_call_start_dest";
     /** 自助录音 */
     public static final String DIALPLAN_CONTEXT_SELF_RECORD = "self_record";
     /** 验证绑定电话 */
