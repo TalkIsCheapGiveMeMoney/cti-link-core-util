@@ -6,25 +6,7 @@ package com.tinet.ctilink.inc;
  */
 public class Const {
     public static final String APPLICATION_VERSION = "application.version";
-    /**
-     * AMI配置
-     */
-    public static final int ASTERISK_AMI_PORT = 5038;
 
-    public static final String ASTERISK_AMI_HOST = "172.16.203.213";
-
-    public static final String ASTERISK_AMI_MANAGER_USER = "manager";
-
-    public static final String ASTERISK_AMI_MANAGER_PWD = "CCIC_AMI_manager";
-
-    public static final String ASTERISK_AMI_ACTION_USER = "action";
-
-    public static final String ASTERISK_AMI_ACTION_PWD = "CCIC_AMI_action";
-
-    /**
-     * AGI配置
-     */
-    public static final int AGI_PORT = 4573;
 
 
     public static final String SOUNDS_MOH_ABS_PATH = "/var/nfs/ctilink/voices/moh/";
@@ -87,7 +69,7 @@ public class Const {
 
     /** 通道变量:ivr_id */
     public static final String IVR_ID = "ivr_id";
-
+    public static final String ENTERPRISE_SETTING_NAME_CALL_LIMIT_IB = "enterprise_call_limit_ib";
     /** 通道变量:ivr_router_type 路由类型 */
     public static final String IVR_ROUTER_TYPE = "ivr_router_type";
 

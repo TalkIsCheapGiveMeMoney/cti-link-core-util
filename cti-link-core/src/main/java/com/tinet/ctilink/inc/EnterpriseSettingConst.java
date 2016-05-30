@@ -9,24 +9,8 @@ public class EnterpriseSettingConst {
     /*
 	 * enterprise enterprise_setting name definition
 	 */
-    /** 短信业务代码标识 特服号码 短信小号 **/
-    public static final String ENTERPRISE_SETTING_NAME_SMS_CELL = "sms_cell";
-    /** 短信签名 **/
-    public static final String ENTERPRISE_SETTING_NAME_SMS_SIGN = "sms_sign";
-    /**is_tail_msg_send	尾巴短信是否打开*/
-    public static final String ENTERPRISE_SETTING_NAME_IS_TAIL_MSG_SEND = "is_tail_msg_send";
 
-    public static final String ENTERPRISE_SETTING_NAME_IS_OB_TAIL_MSG_SEND = "is_ob_tail_msg_send";
-    /**未接短信内容*/
-    public static final String ENTERPRISE_SETTING_NAME_UN_SMS_TEXT = "us_sms_text";
-    /**已接短信内容*/
-    public static final String ENTERPRISE_SETTING_NAME_OK_SMS_TEXT = "ok_sms_text";
-    /**短信接收人*/
-    public static final String ENTERPRISE_SETTING_NAME_SMS_RECIPIENT= "sms_recipient";
-    /**is_call_failed_msg_send	未接来电短信提醒是否打开*/
-    public static final String ENTERPRISE_SETTING_NAME_IS_CALL_FAILED_MSG_SEND = "is_call_failed_msg_send";
-    /**is_call_success_msg_send	已接来电短信是否打开*/
-    public static final String ENTERPRISE_SETTING_NAME_IS_CALL_SUCCESS_MSG_SEND = "is_call_success_msg_send";
+    
     /**enterprise_test_expiry_date 测试账户使用有效日期*/
     public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_TEST_EXPIRY_DATE = "enterprise_test_expiry_date";
     /** 测试账户的使用状态 0-空闲  1-已用 **/
@@ -133,5 +117,7 @@ public class EnterpriseSettingConst {
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_OFF = "0";
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_BLACK = "1";
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_WHITE = "2";
+    
+    public static final String ENTERPRISE_SETTING_NAME_CALL_LIMIT_IB ="enterprise_call_limit_ib";
 
 }
