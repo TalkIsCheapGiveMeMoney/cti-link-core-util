@@ -42,177 +42,7 @@ public class Const {
     public static final int ENTITY_STATUS_CLOSE = 4;
 
 
-    // IVR模块通道变量名
-
-    /**通道变量:is_ib_record */
-    public static final String IS_RECORD = "is_record";
-
-    /**通道变量:is_ob_record  外呼是否录音 0--不录音 ，1--录音 */
-    public static final String RECORD_SCOPE = "record_scope";
-
-    /** 号码状态识别功能是否开启 **/
-    public static final String IS_CRBT_OPEN = "is_crbt_open";
-
-    /** 录音企业定制 **/
-    public static final String RECORD_FILE_USERFIELD = "record_file_userfield";
-    /** 录音企业定制 **/
-    public static final String MONITOR_TYPE = "monitorType";
     
-    /** 通道变量:enterprise_status 企业目前业务状态 */
-    public static final String INBOUND_CALL_LIMIT = "inboundCallLimit";
-
-    /** 通道变量:enterprise_status 企业目前业务状态 */
-    public static final String ENTERPRISE_STATUS = "enterprise_status";
-
-    /** 通道变量:valid_ivr ivr是否有效 */
-    public static final String VALID_IVR = "valid_ivr";
-
-    /** 通道变量:ivr_id */
-    public static final String IVR_ID = "ivr_id";
-    public static final String ENTERPRISE_SETTING_NAME_CALL_LIMIT_IB = "enterprise_call_limit_ib";
-    /** 通道变量:ivr_router_type 路由类型 */
-    public static final String IVR_ROUTER_TYPE = "ivr_router_type";
-
-    /** 通道变量:ivr_router_property 路由规则转移的电话 */
-    public static final String IVR_ROUTER_TEL = "ivr_router_tel";
-    /** 通道变量:ivr_router_property 路由规则转移的分机 */
-    public static final String IVR_ROUTER_EXTEN = "ivr_router_exten";
-
-    /** 通道变量:enterprise_id */
-    public static final String ENTERPRISE_ID = "enterprise_id";
-
-    /** 通道变量:is_ib_record */
-    public static final String IS_IB_RECORD = "is_ib_record";
-
-    /** 通道变量:is_ob_record 外呼是否录音 0--不录音 ，1--录音 */
-    public static final String IS_OB_RECORD = "is_ob_record";
-
-    /** 通道变量:is_restrict_check 是否设置了黑白名单 */
-    public static final String IS_RESTRICT_CHECK = "is_restrict_check";
-
-    /** 通道变量:cdr_customer_vip 来电是否是VIP */
-    public static final String CDR_CUSTOMER_VIP = "cdr_customer_vip";
-
-    /** 通道变量:cdr_customer_crm_id 来电客户对接crm_id */
-    public static final String CDR_CUSTOMER_CRM_ID = "cdr_customer_crm_id";
-
-    /** 通道变量:is_tail_msg_send 尾巴短信是否打开 */
-    public static final String OB_SMS_TAIL = "ob_sms_tail";
-
-    /** 通道变量:is_restrict_tel 是否在黑名单/不在白名单中 */
-    public static final String IS_RESTRICT_TEL = "is_restrict_tel";
-
-    /** 通道变量:is_investigation 前台满意度调查时会设置这个变量 */
-    public static final String IS_INVESTIGATION = "is_investigation";
-
-    /** 通道变量:is_investigation_auto 是否自动满意度调查 */
-    public static final String IS_INVESTIGATION_AUTO = "is_investigation_auto";
-
-    /** 号码状态识别功能是否开启 **/
-    public static final String IS_TSI = "is_tel_status_identification";
-
-    /** 通道变量:is_remember_call 是否开通主叫记忆功能 */
-    public static final String IS_REMEMBER_CALL = "is_remember_call";
-
-    /** 通道变量:cur_queue 当前呼叫的队列 */
-    public static final String CUR_QUEUE = "cur_queue";
-
-    public static final String WEBCALL_TEL = "webcall_tel";
-    public static final String IS_AMD_ON = "is_amd_on";
-    public static final String SUBTEL = "subtel";
-
-    /** 通道变量:cur_queue 当前呼叫的队列 */
-    public static final String NUMBER_TRUNK = "number_trunk";
-
-    public static final String NUMBER_TRUNK_AREA_CODE="number_trunk_area_code";
-
-    /** 通道变量:queue_remember_member 上次在此队列中接听这个号码的座席号 */
-    public static final String QUEUE_REMEMBER_MEMBER = "queue_remember_member";
-
-    /** 通道变量:bridged_cno 桥接的座席号 */
-    public static final String BRIDGED_CNO = "bridged_cno";
-
-    /** 通道变量:cno 本通道的座席号 */
-    public static final String CNO = "cno";
-    public static final String DIAL_TIMEOUT = "dial_timeout";
-    /** 通道变量:consulter_cno 咨询发起者的座席号 */
-    public static final String CONSULTER_CNO = "consulter_cno";
-    /** 通道变量:consulter_cno 被咨询的座席号 */
-    public static final String CONSULTEE_CNO = "consultee_cno";
-
-    public static final String CONSULT_THREEWAY_CHAN = "consult_threeway_chan";
-
-    public static final String CONSULT_CANCEL = "consult_cancel";
-    /** 通道变量:consulter_cno 转移发起者的座席号 */
-    public static final String TRANSFER_CNO = "transfer_cno";
-    /** 通道变量:consulter_cno 被转移的座席号 */
-    public static final String TRANSFEE_CNO = "transfee_cno";
-    public static final String TRANSFER_CHANNEL = "transfer_channel";
-
-    public static final String DISCONNECT_CHAN = "disconnect_chan";
-
-    public static final String SPY_CHAN = "spy_chan";
-    public static final String SPYER_CNO = "spyer_cno";
-    public static final String SPIED_CNO = "spied_cno";
-    public static final String SPY_OBJECT = "spy_object";
-    public static final String OBJECT_TYPE = "object_type";
-
-    public static final String WHISPER_CHAN = "whisper_chan";
-    public static final String WHISPER_CNO = "whisper_cno";
-    public static final String WHISPERED_CNO = "whispered_cno";
-    public static final String WHISPER_OBJECT = "whisper_object";;
-
-    public static final String THREEWAY_CHAN = "threeway_chan";
-    public static final String THREEWAYER_CNO = "threewayer_cno";
-    public static final String THREEWAYED_CNO = "threewayed_cno";
-    public static final String THREEWAY_OBJECT = "threeway_object";;
-
-    public static final String BARGE_CHAN = "barge_chan";
-    public static final String BARGED_CNO = "barged_cno";
-    public static final String BARGER_CNO = "barger_cno";
-    public static final String BARGE_OBJECT = "barge_object";
-    public static final String BARGER_INTERFACE = "barger_interface";
-
-    public static final String PICKUP_CHAN = "pickup_chan";
-    public static final String PICKUPER_CNO = "pickuper_cno";
-    public static final String PICKUPER_INTERFACE = "pickuper_interface";
-
-    public static final String MAIN_CHANNEL = "main_channel";
-
-    public static final String CDR_HOTLINE = "cdr_hotline";
-    public static final String CDR_ENTERPRISE_ID = "cdr_enterprise_id";
-    public static final String CDR_MAIN_UNIQUE_ID = "cdr_main_unique_id";
-    public static final String CDR_START_TIME = "cdr_start_time";
-    public static final String CDR_DETAIL_CNO = "cdr_detail_cno";
-    public static final String CDR_DETAIL_CALL_TYPE = "cdr_detail_call_type";
-    public static final String CDR_DETAIL_GW_IP = "cdr_detail_gw_ip";
-    public static final String CDR_GW_IP = "cdr_gw_ip";
-    public static final String CDR_CUSTOMER_NUMBER = "cdr_customer_number";
-    public static final String CDR_CUSTOMER_NUMBER_TYPE = "cdr_customer_number_type";
-    public static final String CDR_CUSTOMER_AREA_CODE = "cdr_customer_area_code";
-    public static final String CDR_NUMBER_TRUNK = "cdr_number_trunk";
-    public static final String CDR_CALL_TYPE = "cdr_call_type";
-    public static final String CDR_CLIENT_NUMBER = "cdr_client_number";
-    public static final String CDR_EXTEN = "cdr_exten";
-    public static final String CDR_STATUS = "cdr_status";
-    public static final String CDR_BRIDGED_CNO = "cdr_bridged_cno";
-    public static final String CDR_TASK_ID = "cdr_task_id";
-    public static final String CDR_TASK_INVENTORY_ID = "cdr_task_inventory_id";
-    public static final String RECORD_FILE = "record_file";
-    public static final String CDR_RECORD_FILE = "cdr_record_file";
-    public static final String CDR_IVR_ID = "cdr_ivr_id";
-    public static final String CDR_USER_FIELD = "CDR(userfield)";
-    public static final String CDR_ORDER_CALL_BACK = "orderCallBackId";
-
-    public static final String CUR_NODE = "cur_node";
-    public static final String CUR_NODE_ACTION = "cur_node_action";
-
-    public static final String CALL_POWER = "call_power";
-
-    public static final String PREVIEW_OUTCALL_LEFT_CLID = "preview_outcall_left_clid";
-
-    /** 内部呼叫座席号 */
-    public static final String PREVIEW_OUTCALL_INTERNAL_CALL_CNO = "preview_outcall_internal_call_cno";
 
     /** 获取座席loginStatus和DeviceStatus的变量 */
     public static final String AGENT_LOGIN_STATUS = "agent_login_status";
@@ -240,93 +70,7 @@ public class Const {
     public static final String WEBCALL_REQUEST_TIME = "webcall_request_time";
 
 
-    /*
-	 * enterprise cdr status definition
-	 */
-    public static final int CDR_CALL_TYPE_IB = 1; // 呼入
-    public static final int CDR_CALL_TYPE_OB_WEBCALL = 2; // 网上400呼入
-    public static final int CDR_CALL_TYPE_OB = 3; // 点击外呼呼座席的通道
-    public static final int CDR_CALL_TYPE_PREVIEW_OB = 4; // 预览外呼呼座席的通道
-    public static final int CDR_CALL_TYPE_PREDICTIVE_OB = 5; // 预测外呼呼客户的通道
-    public static final int CDR_CALL_TYPE_DIRECT_OB = 6; // 直接外呼座席呼入的通道
-    public static final int CDR_CALL_TYPE_SELF_RECORD_OB = 7; // 自助录音
-    public static final int CDR_CALL_TYPE_SEND_FAX_OB = 8; // 发送传真
-    public static final int CDR_CALL_TYPE_INTERNAL_CALL = 9; // 内部呼叫
-    public static final int CDR_CALL_TYPE_ORDER_CALL_BACK = 10; // 预约回呼
-
-    public static final int CDR_CALL_TYPE_IB_CALL_CLIENT = 101; // 呼入后呼转座席
-    public static final int CDR_CALL_TYPE_IB_TRANSFER = 102; // 呼入的转移
-    public static final int CDR_CALL_TYPE_IB_CONSULT = 103; // 呼入的咨询
-    public static final int CDR_CALL_TYPE_IB_THREEWAY = 104; // 呼入的三方通话
-    public static final int CDR_CALL_TYPE_IB_SPY = 105; // 呼入的被监听
-    public static final int CDR_CALL_TYPE_IB_WHISPER = 106; // 呼入的被耳语
-    public static final int CDR_CALL_TYPE_IB_BARGE = 107; // 呼入的被拦截
-    public static final int CDR_CALL_TYPE_IB_PICKUP = 108; // 呼入的被抢线
-
-    // 通话记录 接听状态 标记
-    public static final int CDR_CALL_TYPE_IB_MARK_MESSAGE = 1; // 留言
-    public static final int CDR_CALL_TYPE_IB_MARK_TRANSFER = 2; // 转移
-    public static final int CDR_CALL_TYPE_IB_MARK_CONSULT = 3; // 咨询
-    public static final int CDR_CALL_TYPE_IB_MARK_THREEWAY = 4; // 三方
-    public static final int CDR_CALL_TYPE_IB_MARK_FAX = 5; // 传真
-    public static final int CDR_CALL_TYPE_IB_MARK_MEETING = 6; // 会议
-    public static final int CDR_CALL_TYPE_IB_MARK_MUTUAL = 7; // 交互
-    public static final int CDR_CALL_TYPE_IB_MARK_AMD = 8; // AMD
-    public static final int CDR_CALL_TYPE_IB_MARK_IN_IVR = 9; // 进入IVR
-    public static final int CDR_CALL_TYPE_IB_MARK_NOT_IN_IVR = 10; // 未进入IVR
-    public static final int CDR_CALL_TYPE_IB_MARK_QUEUE_ABANDON = 11; // 队列中放弃
-    public static final int CDR_CALL_TYPE_IB_MARK_QUEUE_OUT = 12; // 队列中溢出
-    public static final int CDR_CALL_TYPE_IB_MARK_ORDER_CALL_BACK = 13; // 预约回呼
-
-    public static final int CDR_CALL_TYPE_OB_CALL_CLIENT = 201; // 预测外呼的呼座席
-    public static final int CDR_CALL_TYPE_OB_TRANSFER = 202; // 外呼的转移
-    public static final int CDR_CALL_TYPE_OB_CONSULT = 203; // 外呼的咨询
-    public static final int CDR_CALL_TYPE_OB_THREEWAY = 204; // 外呼的三方
-    public static final int CDR_CALL_TYPE_OB_SPY = 205; // 外呼的被监听
-    public static final int CDR_CALL_TYPE_OB_WHISPER = 206; // 外呼的被三方通话
-    public static final int CDR_CALL_TYPE_OB_BARGE = 207; // 外呼的被拦截
-    public static final int CDR_CALL_TYPE_CALL_CUSTOMER = 208; // 点击外呼，预览外呼，直接外呼的呼叫客户
-    public static final int CDR_CALL_TYPE_OB_PICKUP = 209; //预测外呼，webcall外呼抢线
-    
-    public static final int CDR_STATUS_IB_CLIENT_ANSWER = 1;// 座席接听
-    public static final int CDR_STATUS_IB_CLIENT_NO_ANSWER = 2;// 座席未接听
-    public static final int CDR_STATUS_IB_SYSTEM_ANSWER = 3;// 系统接听
-    public static final int CDR_STATUS_IB_NO_ANSWER_INVALID_IVR = 4;// 系统未接-IVR配置错误
-    public static final int CDR_STATUS_IB_NO_ANSWER_STOP = 5;// 5:系统未接-停机
-    public static final int CDR_STATUS_IB_NO_ANSWER_PAUSED = 6;// 系统未接-欠费
-    public static final int CDR_STATUS_IB_NO_ANSWER_BLACK_TEL = 7;// 黑名单
-    public static final int CDR_STATUS_IB_NO_ANSWER_NO_SERVICE = 8;// 8:系统未接-未注册
-    public static final int CDR_STATUS_IB_NO_ANSWER_RINGTONE = 9;// 系统未接-彩铃
-    public static final int CDR_STATUS_IB_NO_ANSWER_WEB400_UNACCEPT = 10;// 网上400未接受
-    public static final int CDR_STATUS_IB_NO_ANSWER_OUT_BOSS_LIMIT = 11;// 呼叫超出营帐中设置的最大限制
-    public static final int CDR_STATUS_IB_NO_ANSWER = 12;// 系统未接
-    public static final int CDR_STATUS_IB_NO_ANSWER_OTHER = 13;// 其他错误
-
-    public static final int CDR_STATUS_DETAIL_CALL_FAIL = 1; // 呼叫失败
-    public static final int CDR_STATUS_DETAIL_ANSWER = 2; // 接听
-
-    public static final int CDR_STATUS_OB_CLIENT_ANSWER_CUSTOMER_NO_ANSWER = 21;
-    public static final int CDR_STATUS_OB_CLIENT_ANSWER_CUSTOMER_CONGESTION = 22;
-    public static final int CDR_STATUS_OB_CUSTOMER_ANSWER_CLIENT_NO_ANSWER = 23;
-    public static final int CDR_STATUS_OB_CLIENT_NO_ANSWER = 24;
-    public static final int CDR_STATUS_OB_CUSTOMER_NO_ANSWER = 25;
-    public static final int CDR_STATUS_OB_CUSTOMER_CONGESTION = 26;
-    public static final int CDR_STATUS_OB_DIRECT_CUSTOMER_NO_ANSWER = 27;
-    public static final int CDR_STATUS_OB_BRIDGED = 28;
-
-    public static final int CDR_MAKR_VOICE_MAIL = 1;
-    public static final int CDR_MARK_TRANSFER = 2;
-    public static final int CDR_MARK_CONSULT = 3;
-    public static final int CDR_MARK_THREEWAY = 4;
-    public static final int CDR_MARK_RECEIVE_FAX = 5;
-    public static final int CDR_MARK_CONFERENCE = 6;
-    public static final int CDR_MARK_INTERACT = 7;
-    public static final int CDR_MARK_AMD = 8;
-    public static final int CDR_MARK_IN_IVR = 9;
-    public static final int CDR_MARK_NOT_IN_IVR = 10;
-    public static final int CDR_MARK_QUEUE_ABANDON = 11;
-    public static final int CDR_MARK_QUEUE_OUT = 12;
-
+   
     public static final int CDR_CALLER_TYPE_UNKNOWN = 1;
     public static final int CDR_CALLER_TYPE_KNOWN = 2;
 
@@ -777,4 +521,68 @@ public class Const {
 	public static final int CLIENT_CALL_POWER_NATIONAL=1;
 	public static final int CLIENT_CALL_POWER_LOCAL=2;
 	public static final int CLIENT_CALL_POWER_INTERNAL=3;
+	
+	public static final int CDR_CALL_TYPE_IB=1;                 //cdr_ib
+	public static final int CDR_CALL_TYPE_OB_WEBCALL=2;         //cdr_ob_
+	public static final int CDR_CALL_TYPE_OB_PREVIEW=4;         //cdr_ob
+	public static final int CDR_CALL_TYPE_OB_PREDICTIVE=5;      //cdr_ob
+	public static final int CDR_CALL_TYPE_OB_DIRECT=6;
+	public static final int CDR_CALL_TYPE_OB_INTERNAL=9;
+
+	public static final int CDR_CALL_TYPE_IB_CALL_AGNET=101;   //呼入后呼转座席
+	public static final int CDR_CALL_TYPE_IB_CALL_TEL=109;
+	public static final int CDR_CALL_TYPE_IB_TRANSFER=102;      //呼入的转移
+	public static final int CDR_CALL_TYPE_IB_CONSULT=103;       //呼入的咨询
+	public static final int CDR_CALL_TYPE_IB_THREEWAY=104;      //呼入的三方通话
+	public static final int CDR_CALL_TYPE_IB_SPY=105;           //呼入的被监听
+	public static final int CDR_CALL_TYPE_IB_WHISPER=106;       //呼入的被耳语
+	public static final int CDR_CALL_TYPE_IB_BARGE=107;         //呼入的被强插
+	public static final int CDR_CALL_TYPE_IB_PICKUP=108;        //呼入的被抢线
+
+	public static final int CDR_CALL_TYPE_OB_CALL_AGENT=201;    //外呼的呼座席
+	public static final int CDR_CALL_TYPE_OB_CALL_TEL=201;      //外呼的呼电话
+	public static final int CDR_CALL_TYPE_OB_TRANSFER=202;      //外呼的转移
+	public static final int CDR_CALL_TYPE_OB_CONSULT=203;       //外呼的咨询
+	public static final int CDR_CALL_TYPE_OB_THREEWAY=204;      //外呼的三方
+	public static final int CDR_CALL_TYPE_OB_SPY=205;           //外呼的被监听
+	public static final int CDR_CALL_TYPE_OB_WHISPER=206;       //外呼的被三方通话
+	public static final int CDR_CALL_TYPE_OB_BARGE=207;         //外呼的被强插
+	public static final int CDR_CALL_TYPE_OB_CALL_CUSTOMER=208;    //点击外呼，预览外呼，直接外呼的呼叫客户
+
+    /*  call_status 呼叫结果定义 */
+	public static final int CDR_STATUS_IB_BRIDGED=1;
+	public static final int CDR_STATUS_IB_CALLED=2;
+	public static final int CDR_STATUS_IB_SYSTEM_ANSWER=3;
+	public static final int CDR_STATUS_IB_BAD_IVR=4;
+	public static final int CDR_STATUS_IB_ENTERPRISE_STOP=5;
+	public static final int CDR_STATUS_IB_ENTERPRISE_PAUSED=6;
+	public static final int CDR_STATUS_IB_BLACK=7;
+	public static final int CDR_STATUS_IB_ENTERPRISE_NO_REG=8;
+	public static final int CDR_STATUS_IB_NOANSWER_COLORRING=9;
+	public static final int CDR_STATUS_IB_OVER_LIMIT=11;
+	public static final int CDR_STATUS_IB_SYSTEM_NOANSWER=12;
+	public static final int CDR_STATUS_IB_FAILED_OTHER=13;
+
+	public static final int CDR_STATUS_OB_WEBCALL_CUSTOMER_TTS_FAIL=20;
+	public static final int CDR_STATUS_OB_WEBCALL_NOANSWER=21;
+	public static final int CDR_STATUS_OB_WEBCALL_ANSWER=22;
+	public static final int CDR_STATUS_OB_WEBCALL_CALLED=23;
+	public static final int CDR_STATUS_OB_WEBCALL_BRIDGED=24;
+	
+	public static final int CDR_STATUS_OB_PREVIEW_AGENT_NO_ANSWER=30;
+	public static final int CDR_STATUS_OB_PREVIEW_AGENT_ANSWER=31;
+	public static final int CDR_STATUS_OB_PREVIEW_CALLED=32;
+	public static final int CDR_STATUS_OB_PREVIEW_BRIDGED=33;
+
+	public static final int CDR_STATUS_OB_PREDICTIVE_CUSTOMER_NO_ANSWER=40;
+	public static final int CDR_STATUS_OB_PREDICTIVE_ANSWER=41;
+	public static final int CDR_STATUS_OB_PREDICTIVE_CALLED=42;
+	public static final int CDR_STATUS_OB_PREDICTIVE_BRIDGED=43;
+
+	public static final int CDR_STATUS_OB_DIRECT_ANSWER=40;
+	public static final int CDR_STATUS_OB_DIRECT_CALLED=42;
+	public static final int CDR_STATUS_OB_DIRECT_BRIDGED=43;
+
+	public static final int CDR_STATUS_DETAIL_CALL_FAIL=1;
+	public static final int CDR_STATUS_DETAIL_ANSWER=2;
 }
