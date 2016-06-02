@@ -47,6 +47,9 @@ public class EnterpriseSettingConst {
     /** 来电记忆功能是否开启 **/
     public static final String ENTERPRISE_SETTING_NAME_IS_REMEMBER_CALL = "is_remember_call";
 
+    /** 来电记忆时间 **/
+    public static final String ENTERPRISE_SETTING_NAME_IB_CALL_REMEMBER_TIME = "ib_call_remember_time";
+
     /** 外呼记忆功能是否开启 **/
     public static final String ENTERPRISE_SETTING_NAME_IS_OUT_REMEMBER_CALL = "is_out_remember_call";
 
@@ -110,6 +113,8 @@ public class EnterpriseSettingConst {
 
     public static final String ENTERPRISE_SETTING_NAME_CLID_LIST="clid_list";
 
+    /** CRM对接弹屏自定义参数 **/
+    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_POPUP_USER_FIELD = "crm_url_popup_user_field";
 
     /**
      * enterprise_setting value
