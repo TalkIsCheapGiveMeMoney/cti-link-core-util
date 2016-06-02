@@ -212,6 +212,7 @@ public class RedisService {
     public <T> Boolean convertAndSend(String channel, T message) {
         try {
             String json = mapper.writeValueAsString(message);
+            logger.info("[convertAndSend] " + channel + " " + json);
             redisTemplate.convertAndSend(channel, json);
         } catch (JsonProcessingException e) {
             logger.error("RedisService.convertAndSend error, channel=" + channel + " message=" + message, e);
