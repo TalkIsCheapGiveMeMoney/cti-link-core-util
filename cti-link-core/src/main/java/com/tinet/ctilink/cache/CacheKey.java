@@ -8,7 +8,7 @@ package com.tinet.ctilink.cache;
  */
 public class CacheKey {
 
-    //****** DB  1   ********
+    //****** DB  1  conf ********
     /**
      * sip_group  <5
      */
@@ -55,11 +55,6 @@ public class CacheKey {
     public static final String PUBLIC_MOH_NAME = "cti-link.public_moh.name.%s";
 
     /**
-     * area_code  30w
-     */
-    public static final String AREA_CODE_PREFIX = "cti-link.area_code.prefix.%s";
-
-    /**
      * entity  <1000
      */
     public static final String ENTITY_ENTERPRISE_ID = "cti-link.entity.%d";
@@ -100,8 +95,6 @@ public class CacheKey {
      * enterprise_setting  <1000
      */
     public static final String ENTERPRISE_SETTING_ENTERPRISE_ID_NAME = "cti-link.enterprise_setting.%d.name.%s";
-
-    public static final String ENTERPRISE_SETTING_ENTERPRISE_ID = "cti-link.enterprise_setting.%s";
 
     /**
      * agent  <20000
@@ -211,22 +204,29 @@ public class CacheKey {
     public static final String TEL_SET_TEL_ENTERPRISE_TSNO = "cti-link.tel_set_tel.%d.tsno.%s";
     
     /**
-     * agent_skill < 100000
-     */
-    public static final String AGNET_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.agent_skill.%d.agent_id.%d";
-    
-    /**
-     * queue_skill < 10000
-     */
-    public static final String QUEUE_SKILL_ENTERPRISE_ID_AGENT_ID = "cti-link.queue_skill.%d.agent_id.%d";
-    
-    /**
      * 
      */
     public static final String EXTEN_ENTERPRISE_ID_EXTEN = "cti-link.exten.%d.exten.%s";
 
+    //****** DB  2  dubbo register ********
 
 
-    //****** DB  6   ********
-    public static final String CONTROL_API_REQUEST_COUNT = "cti-link-control-api.request.count";
+    //****** DB  3  session ********
+
+    //****** DB  4  cti ********
+
+    //****** DB  5  areaCode ********
+    /**
+     * area_code  30w
+     */
+    public static final String AREA_CODE_PREFIX = "cti-link.area_code.prefix.%s";
+
+
+    //****** DB  6  api request limit/other********
+    public static final String CONTROL_API_REQUEST_COUNT = "control-api.request.count";
+
+    //每天统计
+    public static final String TTS_SUCCESS_COUNT = "system.tts.success_count";
+
+    public static final String TTS_FAIL_COUNT = "system.tts.fail_count";
 }
