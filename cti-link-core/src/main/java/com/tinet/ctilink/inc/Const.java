@@ -135,39 +135,6 @@ public class Const {
     public static final int ENTERPRISE_AREA_GROUP_GROUP_TYPE_OTHERS = 2;
 
 
-    /*
-	 * system_setting name definition
-	 */
-    public static final String SYSTEM_SETTING_NAME_FAXC_URL = "faxc_url";
-
-    public static final String SYSTEM_SETTING_NAME_DEFAULT_ROUTER = "default_router";
-    public static final String SYSTEM_SETTING_NAME_DEFAULT_AREA_CODE = "default_area_code";
-    public static final String SYSTEM_SETTING_NAME_IB_CALL_REMEMBER_TIME = "ib_call_remember_time";
-    public static final String SYSTEM_SETTING_NAME_OB_CALL_REMEMBER_TIME = "ob_call_remember_time";
-    public static final String SYSTEM_SETTING_NAME_AMI_RESPONSE_TIMEOUT = "ami_response_timeout";
-
-    public static final String SYSTEM_SETTING_NAME_SMS_URL = "sms_url";
-    public static final String SYSTEM_SETTING_NAME_TIMED_TASK_EMAIL_ADDRESS = "timed_task_email_address";
-    /** 预测外呼未接通话语音分析模块 */
-    public static final String SYSTEM_SETTING_NAME_SPEECH_ENGINE = "speech_engine";
-    /** websocket server rtcweb breaker url */
-    public static final String SYSTEM_SETTING_NAME_WEBRTC_WEBSOCKET_URL = "webrtc_websocket_url";
-    /** websocket stun server url */
-    public static final String SYSTEM_SETTING_NAME_WEBRTC_STUN_SERVER = "webrtc_stun_server";
-    /** 队列中座席接听电话，服务水平秒数 */
-    public static final String SYSTEM_SETTING_NAME_SERVICE_LEVEL = "service_level";
-
-    /** 号码号段 */
-    public static final String SYSTEM_SETTING_NAME_UNICOM_SEGMENT = "unicom_segment";
-    public static final String SYSTEM_SETTING_NAME_TELECOM_SEGMENT = "telecom_segment";
-    public static final String SYSTEM_SETTING_NAME_MOBILE_SEGMENT = "mobile_segment";
-
-    /** 再次推送开关 */
-    public static final String SYSTEM_SETTING_NAME_CURL_AGAIN = "curl_again";
-
-    public static final String SYSTEM_SETTING_NAME_TTSS_PROXY_URL = "tts_proxy_url";
-
-
     public static final int ENTERPRISE_PUSH_TYPE_HANGUP_IB = 1;// 来电挂机
     public static final int ENTERPRISE_PUSH_TYPE_HANGUP_OB = 2;// 外呼挂机
     public static final int ENTERPRISE_PUSH_TYPE_BRIDGE_OB = 3;// 外呼接通
@@ -179,9 +146,6 @@ public class Const {
     public static final int ENTERPRISE_PUSH_TYPE_PRESS_KEY = 9;// 按键推送
     public static final int ENTERPRISE_PUSH_TYPE_TEL_STATUS = 10;// 号码状态识别
     public static final int ENTERPRISE_PUSH_TYPE_RINGING_WEB_CALL = 11;// 网上回呼客户侧响铃
-
-
-    public static final String ENTERPRISE_SETTING_NAME_CURL_LEVEL = "curl_level";
 
 
     /** 号码状态识别推送鉴权参数**/
@@ -434,53 +398,6 @@ public class Const {
 
     public static final String PREDICTIVE_OUT_CALL_MODE_AMI = "ami";
     public static final String PREDICTIVE_OUT_CALL_MODE_SBC = "sbc";
-
-    /*
- * system_setting property definition
- */
-    public static final String SYSTEM_SETTING_PROPERTY_HOUR = "hour";
-    public static final String SYSTEM_SETTING_PROPERTY_MINUTE = "minute";
-    public static final String SYSTEM_SETTING_PROPERTY_SECOND = "second";
-    public static final String SYSTEM_SETTING_PROPERTY_TIMES = "times";
-
-
-
-    /*
-	 * enterprise enterprise_setting name definition
-	 */
-    /** IVR监控设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_IVR_OBSERVER = "ivr_observer";
-    /** 黑白名单设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_RESTRICT_TEL_TYPE = "restrict_tel_type";
-
-    public static final String ENTERPRISE_SETTING_NAME_IS_RECORD = "is_record";
-
-    public static final String ENTERPRISE_SETTING_NAME_IS_CRBT_OPEN = "is_crbt_open"; //是否彩铃，对呼入有效
-
-    /** CRM对接弹屏自定义参数 **/
-    public static final String ENTERPRISE_SETTING_NAME_CRM_URL_POPUP_USER_FIELD = "crm_url_popup_user_field";
-
-    /** 外呼号码状态识别选项 0 关闭 1开启 */
-    public static final String ENTERPRISE_SETTING_NAME_TEL_STATUS_IDENTIFICATION = "tel_status_identification";
-
-    // 网上400推送
-    public static final String ENTERPRISE_SETTING_NAME_CRM_CURL_WEB400_STATUS = "crm_curl_web400_status";
-
-    /** webcall默认ivr设置 **/
-    public static final String ENTERPRISE_SETTING_NAME_WEBCALL_DEFAULT_IVR = "webcall_default_ivr";
-
-    public static final String ENTERPRISE_SETTING_NAME_CLID_LIST="clid_list";
-    
-    public static final String ENTERPRISE_SETTING_NAME_IB_CALL_REMEMBER_TIME = "ib_call_remember_time";
-
-	/**auto_investigation 企业是否开启自动满意度调查：0-关闭  1-开启 **/
-	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION = "auto_investigation";
-	
-	/**auto_investigation 企业是否开启呼入自动满意度调查：0-关闭  1-开启 **/
-	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_IB = "auto_investigation_ib";
-	
-	/**auto_investigation 企业是否开启外呼自动满意度调查：0-关闭  1-开启 **/
-	public static final String ENTERPRISE_SETTING_NAME_AUTO_INVESTIGATION_OB = "auto_investigation_ob";
 	
     public static final String UNKNOWN_NUMBER = "unknown_number";
     public static final String UNKNOWN_AREA = "unknown_area";

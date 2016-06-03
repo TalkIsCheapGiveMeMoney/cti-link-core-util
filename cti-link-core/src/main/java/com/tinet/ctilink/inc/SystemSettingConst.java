@@ -14,6 +14,9 @@ public class SystemSettingConst {
     public static final String SYSTEM_SETTING_PROPERTY_SECOND = "second";
     public static final String SYSTEM_SETTING_PROPERTY_TIMES = "times";
 
+    /**
+     * system_setting name definition
+     */
     public static final String SYSTEM_SETTING_NAME_FAXC_URL = "faxc_url";
 
     public static final String SYSTEM_SETTING_NAME_DEFAULT_ROUTER = "default_router";

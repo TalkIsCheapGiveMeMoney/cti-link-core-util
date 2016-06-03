@@ -116,6 +116,8 @@ public class EnterpriseSettingConst {
     /** CRM对接弹屏自定义参数 **/
     public static final String ENTERPRISE_SETTING_NAME_CRM_URL_POPUP_USER_FIELD = "crm_url_popup_user_field";
 
+    public static final String ENTERPRISE_SETTING_NAME_CURL_LEVEL = "curl_level";
+
     /**
      * enterprise_setting value
      */
