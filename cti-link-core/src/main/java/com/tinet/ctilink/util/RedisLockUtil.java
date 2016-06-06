@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.tinet.ctilink.cache.RedisTemplate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 
@@ -14,6 +17,8 @@ import org.springframework.data.redis.core.script.RedisScript;
  *
  */
 public class RedisLockUtil {
+	private static final Logger logger = LoggerFactory.getLogger(RedisLockUtil.class);
+	
 	private static final long DEFAULT_LOCK_TIME_OUT = 3000; // 锁的过期时间，单位毫秒
 	private static final long DEFAULT_TRY_LOCK_TIME_OUT = 0;// 争抢锁的超时时间，单位毫秒，0代表永不超时（一直抢到锁为止）
 	private static final String LUA_SCRIPT_LOCK = "return redis.call('SET', KEYS[1], ARGV[1], 'NX', 'PX', ARGV[2]) ";
@@ -73,6 +78,7 @@ public class RedisLockUtil {
 				}
 			}
 		}
+		logger.error("Fail to get lock key:{},lockTimeout:{},tryLockTimeout:{}", key, lockTimeout, tryLockTimeout);
 		return null;
 	}
 
