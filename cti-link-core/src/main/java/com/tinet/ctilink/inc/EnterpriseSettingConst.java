@@ -105,6 +105,7 @@ public class EnterpriseSettingConst {
 
     public static final String ENTERPRISE_SETTING_NAME_IS_CRBT_OPEN = "is_crbt_open"; //是否彩铃，对呼入有效
     public static final String ENTERPRISE_SETTING_NAME_RECORD_FILE_USERFIELD = "record_file_userfield";
+    public static final String ENTERPRISE_SETTING_NAME_MP3_RATIO = "mp3_ratio";
     // 网上400推送
     public static final String ENTERPRISE_SETTING_NAME_CRM_CURL_WEB400_STATUS = "crm_curl_web400_status";
 
