@@ -9,8 +9,6 @@ public class EnterpriseSettingConst {
     /*
 	 * enterprise enterprise_setting name definition
 	 */
-
-    
     /**enterprise_test_expiry_date 测试账户使用有效日期*/
     public static final String ENTERPRISE_SETTING_NAME_ENTERPRISE_TEST_EXPIRY_DATE = "enterprise_test_expiry_date";
     /** 测试账户的使用状态 0-空闲  1-已用 **/
@@ -118,6 +116,7 @@ public class EnterpriseSettingConst {
 
     public static final String ENTERPRISE_SETTING_NAME_CURL_LEVEL = "curl_level";
 
+    public static final String ENTERPRISE_SETTING_NAME_CDR_USER_FIELD = "cdr_user_field";
     /**
      * enterprise_setting value
      */
