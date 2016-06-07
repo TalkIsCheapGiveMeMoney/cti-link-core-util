@@ -17,6 +17,12 @@ public class SystemSettingConst {
     /**
      * system_setting name definition
      */
+    /* 话单保留时间 36个月 */
+    public static final String SYSTEM_SETTING_NAME_CDR_EXPIRE_MONTH = "cdr_expire_month";
+
+    /* 日志保留时间 3个月 */
+    public static final String SYSTEM_SETTING_NAME_LOG_EXPIRE_MONTH = "log_expire_month";
+
     public static final String SYSTEM_SETTING_NAME_FAXC_URL = "faxc_url";
 
     public static final String SYSTEM_SETTING_NAME_DEFAULT_ROUTER = "default_router";

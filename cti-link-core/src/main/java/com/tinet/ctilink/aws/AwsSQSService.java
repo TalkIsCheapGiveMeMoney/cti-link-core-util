@@ -13,19 +13,18 @@ import java.util.Map;
 
 /**
  * aws sqs 操作类
- *
  */
 public class AwsSQSService {
     private AmazonSQS sqsClient;
 
-    public void setSqsClient(AmazonSQS  sqsClient){
-        this.sqsClient= sqsClient;
+    public void setSqsClient(AmazonSQS sqsClient) {
+        this.sqsClient = sqsClient;
         this.sqsClient.setRegion(Region.getRegion(Regions.CN_NORTH_1));
     }
 
     public List<Message> receiveMessage(String queueUrl) {
-        List<Message> messages=null;
-        try{
+        List<Message> messages = null;
+        try {
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(queueUrl);
             messages = sqsClient.receiveMessage(receiveMessageRequest).getMessages();
         } catch (AmazonServiceException ase) {
@@ -40,38 +39,38 @@ public class AwsSQSService {
 
 
     public boolean sendMessage(String msg, String queueUrl) {
-        boolean flag=true;
+        boolean flag = true;
 
-        try{
+        try {
             SendMessageRequest sendReq = new SendMessageRequest(queueUrl, msg);
             SendMessageResult rs = sqsClient.sendMessage(sendReq);
             rs.getMessageId();
 
         } catch (AmazonServiceException ase) {
             ase.printStackTrace();
-            flag=false;
+            flag = false;
         } catch (AmazonClientException ace) {
             ace.printStackTrace();
-            flag=false;
+            flag = false;
         }
         return flag;
     }
 
-    public void deleteMessage(String sqsUrl, String receiptHandle){
-        try{
+    public void deleteMessage(String sqsUrl, String receiptHandle) {
+        try {
             sqsClient.deleteMessage(new DeleteMessageRequest().withQueueUrl(sqsUrl).withReceiptHandle(receiptHandle));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ListQueuesResult searchQueueUrl(String urlPrefix){
+    public ListQueuesResult searchQueueUrl(String urlPrefix) {
         ListQueuesResult listQueueRs = null;
-        try{
+        try {
 
-            if(urlPrefix!=null && !urlPrefix.trim().isEmpty()){
-                listQueueRs =  sqsClient.listQueues(urlPrefix);
-            }else{
+            if (urlPrefix != null && !urlPrefix.trim().isEmpty()) {
+                listQueueRs = sqsClient.listQueues(urlPrefix);
+            } else {
                 listQueueRs = sqsClient.listQueues();
             }
 
@@ -84,14 +83,14 @@ public class AwsSQSService {
         return listQueueRs;
     }
 
-    public String createQueue(String queue, Integer maxSize, Integer retentionPeriod, Integer waitTimeSecond, Integer visiblitityTimeout){
+    public String createQueue(String queue, Integer maxSize, Integer retentionPeriod, Integer waitTimeSecond, Integer visiblitityTimeout) {
         ListQueuesResult listQueues = searchQueueUrl(queue);
-        if(listQueues != null && listQueues.getQueueUrls() != null && listQueues.getQueueUrls().size() > 0){
+        if (listQueues != null && listQueues.getQueueUrls() != null && listQueues.getQueueUrls().size() > 0) {
             return listQueues.getQueueUrls().get(0).toString();
         }
-        try{
+        try {
             CreateQueueRequest createQueueRequest = new CreateQueueRequest(queue);
-            HashMap<String, String> attributes = new HashMap<String,String>();
+            HashMap<String, String> attributes = new HashMap<String, String>();
             attributes.put("DelaySeconds", "0");
             attributes.put("MaximumMessageSize", String.valueOf(maxSize));
             attributes.put("MessageRetentionPeriod", String.valueOf(retentionPeriod));
@@ -109,13 +108,13 @@ public class AwsSQSService {
         return null;
     }
 
-    public Map<String, String> getQueueAttribute(String sqsUrl, List<String> attributes){
-        try{
+    public Map<String, String> getQueueAttribute(String sqsUrl, List<String> attributes) {
+        try {
             GetQueueAttributesResult result = sqsClient.getQueueAttributes(new GetQueueAttributesRequest(sqsUrl, attributes));
-            if(result != null){
+            if (result != null) {
                 return result.getAttributes();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
