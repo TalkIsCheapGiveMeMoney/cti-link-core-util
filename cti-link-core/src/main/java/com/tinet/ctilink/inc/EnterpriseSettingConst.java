@@ -118,14 +118,13 @@ public class EnterpriseSettingConst {
     public static final String ENTERPRISE_SETTING_NAME_CURL_LEVEL = "curl_level";
 
     public static final String ENTERPRISE_SETTING_NAME_CDR_USER_FIELD = "cdr_user_field";
+
+    public static final String ENTERPRISE_SETTING_NAME_CALL_LIMIT_IB ="enterprise_call_limit_ib";
+
     /**
      * enterprise_setting value
      */
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_OFF = "0";
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_BLACK = "1";
     public static final String ENTERPRISE_SETTING_VALUE_RESTRICT_TEL_TYPE_WHITE = "2";
-    
-    public static final String ENTERPRISE_SETTING_NAME_CALL_LIMIT_IB ="enterprise_call_limit_ib";
-    public static final String ENTERPRISE_SETTING_NAME_CDR_USER_FIELD = "cdr_user_field";
-
 }
