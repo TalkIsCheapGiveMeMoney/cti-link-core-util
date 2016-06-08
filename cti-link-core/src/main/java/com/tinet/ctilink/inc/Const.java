@@ -261,33 +261,6 @@ public class Const {
     /**sip*/
     public static final int TEL_TYPE_SIP = 4;
 
-    // begin Redis消息广播的channel
-    public static final String REDIS_CHANNEL_SYNC_SYSTEMSETTING = "channel:sync:systemsetting";
-    public static final String REDIS_CHANNEL_SYNC_ENTERPRISESETTING = "channel:sync:enterprisesetting";
-    public static final String REDIS_CHANNEL_SYNC_ENTERPRISENODESETTING = "channel:sync:enterprisenodesetting";
-    public static final String REDIS_CHANNEL_SYNC_PUBLICMOH = "channel:sync:publicmoh";
-    public static final String REDIS_CHANNEL_SYNC_ENTERPRISEMOH = "channel:sync:enterprisemoh";
-    public static final String REDIS_CHANNEL_SYNC_ENTERPRISEHOTLINE = "channel:sync:enterprisehotline";
-    public static final String REDIS_CHANNEL_SYNC_QUEUE = "channel:sync:queue";
-    public static final String REDIS_CHANNEL_SYNC_QUEUEMEMBER = "channel:sync:queuemember";
-    public static final String REDIS_CHANNEL_SYNC_GATEWAY = "channel:sync:gateway";
-    public static final String REDIS_CHANNEL_SYNC_CTI = "channel:sync:cti";
-    public static final String REDIS_CHANNEL_SYNC_SIPCONF = "channel:sync:sipconf";
-    public static final String REDIS_CHANNEL_AMIEVENT = "channel:amievent";
-    // end 通过Redis进行消息广播的channel
-
-    // begin Redis的缓存Key
-    public static final String REDIS_CTIAGENT_ONLINE = "ctiagent:online";
-    public static final String REDIS_CTIAGENT_PAUSE = "ctiagent:pause";
-    public static final String REDIS_CTIAGENT_COUNT = "ctiagent:count";
-    public static final String REDIS_CTIAGENT_LOCK = "ctiagent:lock";
-    public static final String REDIS_CURL_PUSH = "curl:push";
-    public static final String REDIS_CURL_RESEND = "curl:resend";
-    public static final String REDIS_CURL_LOG = "curl:log";
-    public static final String REDIS_PORTAL_IMAGELINK = "portal:imagelink";
-    public static final String REDIS_PORTAL_IMAGEURL = "portal:imageurl";
-    public static final String REDIS_PORTAL_BACKGROUNDCOLOR = "portal:backgroundcolor";
-
     /**
      * bindType
      */
@@ -354,46 +327,6 @@ public class Const {
 
     public static final Integer LOG_TTS_CALL_FROM_DIALPLAN = 1;
     public static final Integer LOG_TTS_CALL_FROM_WEBCALL = 2;
-
-
-    /*
- * WebCall_call return_type definition
- */
-    public static final int WEB_CALL_FAILED = 0;
-    public static final int WEB_CALL_SUCCESS = 1;
-    public static final int WEB_CALL_UNAVAILABLE_AMI_SERVER = 2;
-    public static final int WEB_CALL_UNAVAILABLE_SYSTEM_SETTING = 3;
-    public static final int WEB_CALL_UNAVAILABLE_ENTERPRISE_SETTING = 4;
-    public static final int WEB_CALL_UNAVAILABLE_ROUTER = 5;
-
-    /*
-     * Web400CallService_call return_type definition
-     */
-    public static final int WEB400_CALL_CHECK_OK = -1;
-    public static final int WEB400_CALL_FAILED = 0;
-    public static final int WEB400_CALL_SUCCESS = 1;
-    public static final int WEB400_CALL_UNAVAILABLE_AMI_SERVER = 2;
-    public static final int WEB400_CALL_UNAVAILABLE_SYSTEM_SETTING = 3;
-    public static final int WEB400_CALL_UNAVAILABLE_ENTERPRISE_SETTING = 4;
-    public static final int WEB400_CALL_UNAVAILABLE_ROUTER = 5;
-    public static final int WEB400_CALL_UNAVAILABLE_ENTERPRISE_STATUS = 6;
-    public static final int WEB400_CALL_UNAVAILABLE_TEL = 7;
-    public static final int WEB400_CALL_UNAVAILABLE_TIME = 8;
-    public static final int WEB400_CALL_UNAVAILABLE_QNO = 9;
-    public static final int WEB400_CALL_BLACK_IP = 10;
-    public static final int WEB400_CALL_BLACK_COOKIENAME = 11;
-    public static final int WEB400_CALL_BLACK_TEL = 12;
-    public static final int WEB400_CALL_ENTERPRISE_BLACK_TEL = 13;
-    public static final int WEB400_CALL_NO_IVR = 14;
-    public static final int WEB400_CALL_UNKNOWN_ERROR = 15;
-    public static final int WEB400_CALL_ILLEGAL_ENTERPRISE = 16;
-    public static final int WEB400_CALL_UNAVAILABLE_IVR_ID = 17;
-    public static final int WEB400_CALL_UNAVAILABLE_CLID_NUMBER = 18;
-    public static final int WEB400_CALL_PLATFORM_MAX_LIMIT = 19;
-    public static final int WEB400_CALL_ENTERPRISE_MAX_LIMIT = 20;
-    public static final int WEB400_CALL_SECURITY_CODE_ERROR = 21;
-
-    public static final int WEB400_CALL_TIMEOUT_DEFAULT = 30;
 
 
     public static final String PREDICTIVE_OUT_CALL_MODE_AMI = "ami";

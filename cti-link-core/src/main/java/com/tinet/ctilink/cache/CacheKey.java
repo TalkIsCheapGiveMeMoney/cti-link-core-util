@@ -161,7 +161,9 @@ public class CacheKey {
     /**
      * enterprise_hangup_action  <1000
      */
-    public static final String ENTERPRISE_HANGUP_ACTION_ENTERPRISE_ID_TYPE = "cti-link.enterprise_hangup_action.%d.type.%d";
+    public static final String ENTERPRISE_PUSH_ACTION_ENTERPRISE_ID_TYPE = "cti-link.enterprise_push_action.%d.type.%d";
+
+    public static final String ENTERPRISE_PUSH_ACTION_ID = "cti-link.enterprise_push_action.id.%d";
 
     /**
      * enterprise_hangup_set  <1000
