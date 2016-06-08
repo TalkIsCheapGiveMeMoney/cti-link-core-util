@@ -159,7 +159,7 @@ public class CacheKey {
     public static final String ENTERPRISE_AREA_GROUP_ENTERPRISE_ID_ID = "cti-link.enterprise_area_group.%d.id.%d";
 
     /**
-     * enterprise_hangup_action  <1000
+     * enterprise_push_action  <1000
      */
     public static final String ENTERPRISE_PUSH_ACTION_ENTERPRISE_ID_TYPE = "cti-link.enterprise_push_action.%d.type.%d";
 

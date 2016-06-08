@@ -7,7 +7,7 @@ import java.util.List;
  * @date 16/6/7 14:52
  */
 public interface MessageQueue {
-    <T> void sendMessage(T t);
+    <T> Boolean sendMessage(T t);
 
     <T> List<T> receiveMessage(Class<T> clazz);
 

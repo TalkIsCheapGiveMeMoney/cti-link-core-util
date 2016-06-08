@@ -21,7 +21,7 @@ public class ActiveMQ implements MessageQueue {
     private String destination;
 
     @Override
-    public <T> void sendMessage(T t) {
+    public <T> Boolean sendMessage(T t) {
         String json = JSONObject.getJSONString(t);
         if (json != null) {
             jmsTemplate.send(destination, new MessageCreator() {
@@ -31,7 +31,7 @@ public class ActiveMQ implements MessageQueue {
                 }
             });
         }
-
+        return true;
     }
 
     @Override

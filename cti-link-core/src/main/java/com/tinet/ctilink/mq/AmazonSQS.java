@@ -32,7 +32,10 @@ public class AmazonSQS implements MessageQueue {
     }
 
     @Override
-    public <T> void sendMessage(T t) {
+    public <T> Boolean sendMessage(T t) {
+        if (t == null) {
+            return false;
+        }
         try {
             if (sqsUrl != null) {
                 String json = JSONObject.getJSONString(t);
@@ -42,7 +45,10 @@ public class AmazonSQS implements MessageQueue {
             }
         } catch (Exception e) {
             logger.error("AmazonSQS.sendMessage error", e);
+            return false;
         }
+
+        return true;
     }
 
     @Override

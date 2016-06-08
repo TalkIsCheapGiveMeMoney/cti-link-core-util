@@ -1,6 +1,5 @@
 package com.tinet.ctilink.aws;
 
-import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -29,9 +28,6 @@ public class AwsSQSService {
             messages = sqsClient.receiveMessage(receiveMessageRequest).getMessages();
         } catch (AmazonServiceException ase) {
             ase.printStackTrace();
-
-        } catch (AmazonClientException ace) {
-            ace.printStackTrace();
         }
 
         return messages;
@@ -48,9 +44,6 @@ public class AwsSQSService {
 
         } catch (AmazonServiceException ase) {
             ase.printStackTrace();
-            flag = false;
-        } catch (AmazonClientException ace) {
-            ace.printStackTrace();
             flag = false;
         }
         return flag;
@@ -76,9 +69,6 @@ public class AwsSQSService {
 
         } catch (AmazonServiceException ase) {
             ase.printStackTrace();
-
-        } catch (AmazonClientException ace) {
-            ace.printStackTrace();
         }
         return listQueueRs;
     }
@@ -86,24 +76,22 @@ public class AwsSQSService {
     public String createQueue(String queue, Integer maxSize, Integer retentionPeriod, Integer waitTimeSecond, Integer visiblitityTimeout) {
         ListQueuesResult listQueues = searchQueueUrl(queue);
         if (listQueues != null && listQueues.getQueueUrls() != null && listQueues.getQueueUrls().size() > 0) {
-            return listQueues.getQueueUrls().get(0).toString();
+            return listQueues.getQueueUrls().get(0);
         }
         try {
             CreateQueueRequest createQueueRequest = new CreateQueueRequest(queue);
-            HashMap<String, String> attributes = new HashMap<String, String>();
+            HashMap<String, String> attributes = new HashMap<>();
             attributes.put("DelaySeconds", "0");
             attributes.put("MaximumMessageSize", String.valueOf(maxSize));
             attributes.put("MessageRetentionPeriod", String.valueOf(retentionPeriod));
             attributes.put("ReceiveMessageWaitTimeSeconds", String.valueOf(waitTimeSecond));
             attributes.put("VisibilityTimeout", String.valueOf(visiblitityTimeout));
             createQueueRequest.setAttributes(attributes);
-            System.out.println("create SQS queue: " + queue + " with attribute: " + attributes.toString());
+
             return sqsClient.createQueue(createQueueRequest).getQueueUrl();
         } catch (AmazonServiceException ase) {
             ase.printStackTrace();
 
-        } catch (AmazonClientException ace) {
-            ace.printStackTrace();
         }
         return null;
     }
