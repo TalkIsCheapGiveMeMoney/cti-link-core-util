@@ -6,6 +6,7 @@ import com.tinet.ctilink.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author fengwei //
  * @date 16/4/18 16:49
  */
-public class AmazonSQS implements MessageQueue {
+public class AmazonSQS implements MessageQueue, InitializingBean {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private String sqsName;
@@ -28,7 +29,6 @@ public class AmazonSQS implements MessageQueue {
     private AwsSQSService awsSQSService;
 
     public AmazonSQS() {
-        sqsUrl = awsSQSService.createQueue(sqsName, maxSize, retentionPeriod, waitTimeSecond, visibilityTimeout);
     }
 
     @Override
@@ -94,51 +94,32 @@ public class AmazonSQS implements MessageQueue {
         return 0;
     }
 
-    public String getSqsName() {
-        return sqsName;
-    }
-
     public void setSqsName(String sqsName) {
         this.sqsName = sqsName;
-    }
-
-    public Integer getMaxSize() {
-        return maxSize;
     }
 
     public void setMaxSize(Integer maxSize) {
         this.maxSize = maxSize;
     }
 
-    public Integer getRetentionPeriod() {
-        return retentionPeriod;
-    }
-
     public void setRetentionPeriod(Integer retentionPeriod) {
         this.retentionPeriod = retentionPeriod;
-    }
-
-    public Integer getWaitTimeSecond() {
-        return waitTimeSecond;
     }
 
     public void setWaitTimeSecond(Integer waitTimeSecond) {
         this.waitTimeSecond = waitTimeSecond;
     }
 
-    public Integer getVisibilityTimeout() {
-        return visibilityTimeout;
-    }
-
     public void setVisibilityTimeout(Integer visibilityTimeout) {
         this.visibilityTimeout = visibilityTimeout;
     }
 
-    public AwsSQSService getAwsSQSService() {
-        return awsSQSService;
-    }
-
     public void setAwsSQSService(AwsSQSService awsSQSService) {
         this.awsSQSService = awsSQSService;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        sqsUrl = awsSQSService.createQueue(sqsName, maxSize, retentionPeriod, waitTimeSecond, visibilityTimeout);
     }
 }
