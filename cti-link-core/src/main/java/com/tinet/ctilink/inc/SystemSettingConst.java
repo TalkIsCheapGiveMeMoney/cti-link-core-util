@@ -56,4 +56,9 @@ public class SystemSettingConst {
 
     public static final String SYSTEM_SETTING_NAME_CONTROL_API_WHITE_IP_LIST = "control_api_white_ip_list";
 
+    /** DynamoDB表名前后缀配置 */
+    public static final String SYSTEM_SETTING_NAME_DYNAMODB_TABLE_NAME_PREFIX = "dynamodb_table_name_prefix";
+
+    public static final String SYSTEM_SETTING_NAME_DYNAMODB_TABLE_NAME_SUFFIX = "dynamodb_table_name_suffix";
+
 }

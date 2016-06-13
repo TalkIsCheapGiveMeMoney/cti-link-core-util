@@ -382,7 +382,6 @@ public class Const {
 	public static final int CDR_CALL_TYPE_OB_INTERNAL=9;
 
 	public static final int CDR_CALL_TYPE_IB_CALL_AGNET=101;   //呼入后呼转座席
-	public static final int CDR_CALL_TYPE_IB_CALL_TEL=109;
 	public static final int CDR_CALL_TYPE_IB_TRANSFER=102;      //呼入的转移
 	public static final int CDR_CALL_TYPE_IB_CONSULT=103;       //呼入的咨询
 	public static final int CDR_CALL_TYPE_IB_THREEWAY=104;      //呼入的三方通话
@@ -390,9 +389,9 @@ public class Const {
 	public static final int CDR_CALL_TYPE_IB_WHISPER=106;       //呼入的被耳语
 	public static final int CDR_CALL_TYPE_IB_BARGE=107;         //呼入的被强插
 	public static final int CDR_CALL_TYPE_IB_PICKUP=108;        //呼入的被抢线
+    public static final int CDR_CALL_TYPE_IB_CALL_TEL=109;
 
-	public static final int CDR_CALL_TYPE_OB_CALL_AGENT=201;    //外呼的呼座席
-	public static final int CDR_CALL_TYPE_OB_CALL_TEL=201;      //外呼的呼电话
+    public static final int CDR_CALL_TYPE_OB_CALL_AGENT=201;    //外呼的呼座席
 	public static final int CDR_CALL_TYPE_OB_TRANSFER=202;      //外呼的转移
 	public static final int CDR_CALL_TYPE_OB_CONSULT=203;       //外呼的咨询
 	public static final int CDR_CALL_TYPE_OB_THREEWAY=204;      //外呼的三方
