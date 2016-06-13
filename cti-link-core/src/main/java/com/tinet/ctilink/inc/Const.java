@@ -300,6 +300,8 @@ public class Const {
 
     public static final String DIALPLAN_CONTEXT_DIRECT_CALL_READ = "direct_call_read";
 
+    public static final String DIALPLAN_CONTEXT_WEBCALL_PRE_RUN = "\"webcall_pre_run,1234,1\"";
+
     /**
      * clid type
      */
