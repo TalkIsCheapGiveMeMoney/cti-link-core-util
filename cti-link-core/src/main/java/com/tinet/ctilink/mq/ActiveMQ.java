@@ -14,6 +14,7 @@ import java.util.List;
  * @author fengwei //
  * @date 16/4/18 17:04
  */
+//TODO 可能运行不了, 待测试
 public class ActiveMQ implements MessageQueue {
 
     private JmsTemplate jmsTemplate;
