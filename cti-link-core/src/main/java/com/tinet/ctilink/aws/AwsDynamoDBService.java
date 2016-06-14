@@ -8,7 +8,6 @@ import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.NameMap;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
-import com.tinet.ctilink.util.ContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +51,32 @@ public class AwsDynamoDBService {
         return table.putItem(item, conditionExpression, nameMap, valueMap);
     }
 
+    /** 按照主键查询 */
+    public Item getItem(String tableName, String hashKeyName, Object hashKeyValue
+            , String rangeKeyName, Object rangeKeyValue) {
+        Table table = dynamoDB.getTable(tableName);
+
+        return table.getItem(hashKeyName, hashKeyValue, rangeKeyName, rangeKeyValue);
+    }
+
+    public ItemCollection<QueryOutcome> query(String tableName, String indexName, String keyConditionExpression
+            , Map<String, Object> valueMap, int limit) {
+        try {
+            Table table = dynamoDB.getTable(tableName);
+            Index index = table.getIndex(indexName);
+            QuerySpec querySpec = new QuerySpec();
+
+            querySpec.withKeyConditionExpression(keyConditionExpression)
+                    .withValueMap(valueMap)
+                    .withMaxResultSize(limit);
+            return index.query(querySpec);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public ItemCollection<QueryOutcome> query(String tableName, String indexName) {
         try {
             Table table = dynamoDB.getTable(tableName);
@@ -65,7 +90,8 @@ public class AwsDynamoDBService {
 
             querySpec.withKeyConditionExpression("#enterpriseId = :enterpriseId")
                 .withNameMap(name)
-                .withValueMap(value);
+                .withValueMap(value)
+                .withScanIndexForward(true);
             return index.query(querySpec);
         } catch (Exception e) {
             e.printStackTrace();
