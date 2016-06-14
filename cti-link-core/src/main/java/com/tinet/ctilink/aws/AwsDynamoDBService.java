@@ -4,6 +4,9 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.utils.NameMap;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.tinet.ctilink.util.ContextUtil;
 import org.slf4j.Logger;
@@ -42,13 +45,28 @@ public class AwsDynamoDBService {
         return table.putItem(item);
     }
 
-    public PutItemOutcome putItemByCondition(String tableName, Item item,
-                                             String conditionExpression, Map<String, String> expressionAttributeNames,
-                                             Map<String, Object> expressionAttributeValues) {
+    public PutItemOutcome putItem(String tableName, Item item, String conditionExpression
+            , Map<String, String> nameMap, Map<String, Object> valueMap) {
+        Table table = dynamoDB.getTable(tableName);
+        // Write the item to the table
+        return table.putItem(item, conditionExpression, nameMap, valueMap);
+    }
+
+    public ItemCollection<QueryOutcome> query(String tableName, String indexName) {
         try {
             Table table = dynamoDB.getTable(tableName);
-            // Write the item to the table
-            return table.putItem(item, conditionExpression, expressionAttributeNames, expressionAttributeValues);
+            Index index = table.getIndex(indexName);
+            NameMap name = new NameMap();
+            name.put("#enterpriseId", "enterpriseId");
+
+            ValueMap value = new ValueMap();
+            value.put(":enterpriseId", 6000001);
+            QuerySpec querySpec = new QuerySpec();
+
+            querySpec.withKeyConditionExpression("#enterpriseId = :enterpriseId")
+                .withNameMap(name)
+                .withValueMap(value);
+            return index.query(querySpec);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,64 +116,73 @@ public class AwsDynamoDBService {
         return null;
     }
 
+    public TableDescription updateCapacityUnits(String tableName, Long readCapacityUnits, Long writeCapacityUnits) {
+        Table table = dynamoDB.getTable(tableName);
+        ProvisionedThroughput throughput = new ProvisionedThroughput()
+                .withReadCapacityUnits(readCapacityUnits)
+                .withWriteCapacityUnits(writeCapacityUnits);
+
+        return table.updateTable(throughput);
+    }
+
     public static void main(String[] args) {
 
         ArrayList<KeySchemaElement> keySchemaElements = new ArrayList<>();
-        keySchemaElements.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        keySchemaElements.add(new KeySchemaElement().withAttributeName("uniqueId").withKeyType(KeyType.RANGE));
+        keySchemaElements.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        keySchemaElements.add(new KeySchemaElement().withAttributeName("cdr_unique_id").withKeyType(KeyType.RANGE));
 
         ArrayList<AttributeDefinition> attributeDefinitions = new ArrayList<>();
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("enterpriseId").withAttributeType(ScalarAttributeType.N));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("uniqueId").withAttributeType(ScalarAttributeType.S));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("startTime").withAttributeType(ScalarAttributeType.N));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("endTime").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_enterprise_id").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_unique_id").withAttributeType(ScalarAttributeType.S));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_start_time").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_end_time").withAttributeType(ScalarAttributeType.N));
 
         ArrayList<LocalSecondaryIndex> localSecondaryIndexes = new ArrayList<>();
         ArrayList<KeySchemaElement> startTimeIndex = new ArrayList<>();
-        startTimeIndex.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        startTimeIndex.add(new KeySchemaElement().withAttributeName("startTime").withKeyType(KeyType.RANGE));
+        startTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        startTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_start_time").withKeyType(KeyType.RANGE));
         localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("startTimeIndex").withKeySchema(startTimeIndex)
                 .withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
 
         ArrayList<KeySchemaElement> endTimeIndex = new ArrayList<>();
-        endTimeIndex.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        endTimeIndex.add(new KeySchemaElement().withAttributeName("endTime").withKeyType(KeyType.RANGE));
+        endTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        endTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_end_time").withKeyType(KeyType.RANGE));
         localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("endTimeIndex").withKeySchema(endTimeIndex)
                 .withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
 
-        //awsDynamoDBService.createTable("CdrObAgent", keySchemaElements, attributeDefinitions, localSecondaryIndexes);
+        //awsDynamoDBService.createTable("CdrObCustomer", keySchemaElements, attributeDefinitions, localSecondaryIndexes);
 
         keySchemaElements = new ArrayList<>();
-        keySchemaElements.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        keySchemaElements.add(new KeySchemaElement().withAttributeName("uniqueId").withKeyType(KeyType.RANGE));
+        keySchemaElements.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        keySchemaElements.add(new KeySchemaElement().withAttributeName("cdr_unique_id").withKeyType(KeyType.RANGE));
 
         attributeDefinitions = new ArrayList<>();
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("enterpriseId").withAttributeType(ScalarAttributeType.N));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("uniqueId").withAttributeType(ScalarAttributeType.S));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("mainUniqueId").withAttributeType(ScalarAttributeType.S));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("startTime").withAttributeType(ScalarAttributeType.N));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("endTime").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_enterprise_id").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_unique_id").withAttributeType(ScalarAttributeType.S));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_main_unique_id").withAttributeType(ScalarAttributeType.S));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_start_time").withAttributeType(ScalarAttributeType.N));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("cdr_end_time").withAttributeType(ScalarAttributeType.N));
 
         localSecondaryIndexes = new ArrayList<>();
         startTimeIndex = new ArrayList<>();
-        startTimeIndex.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        startTimeIndex.add(new KeySchemaElement().withAttributeName("startTime").withKeyType(KeyType.RANGE));
+        startTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        startTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_start_time").withKeyType(KeyType.RANGE));
         localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("startTimeIndex").withKeySchema(startTimeIndex)
                 .withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
 
         endTimeIndex = new ArrayList<>();
-        endTimeIndex.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        endTimeIndex.add(new KeySchemaElement().withAttributeName("endTime").withKeyType(KeyType.RANGE));
+        endTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        endTimeIndex.add(new KeySchemaElement().withAttributeName("cdr_end_time").withKeyType(KeyType.RANGE));
         localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("endTimeIndex").withKeySchema(endTimeIndex)
                 .withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
 
         ArrayList<KeySchemaElement> mainUniqueIdIndex = new ArrayList<>();
-        mainUniqueIdIndex.add(new KeySchemaElement().withAttributeName("enterpriseId").withKeyType(KeyType.HASH));
-        mainUniqueIdIndex.add(new KeySchemaElement().withAttributeName("mainUniqueId").withKeyType(KeyType.RANGE));
+        mainUniqueIdIndex.add(new KeySchemaElement().withAttributeName("cdr_enterprise_id").withKeyType(KeyType.HASH));
+        mainUniqueIdIndex.add(new KeySchemaElement().withAttributeName("cdr_main_unique_id").withKeyType(KeyType.RANGE));
         localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("mainUniqueIdIndex").withKeySchema(mainUniqueIdIndex)
                 .withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
 
-        //awsDynamoDBService.createTable("CdrObAgentDetail", keySchemaElements, attributeDefinitions, localSecondaryIndexes);
+        //awsDynamoDBService.createTable("CdrObCustomerDetail", keySchemaElements, attributeDefinitions, localSecondaryIndexes);
 
 
     }
