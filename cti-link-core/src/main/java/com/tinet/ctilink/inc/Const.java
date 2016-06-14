@@ -436,4 +436,8 @@ public class Const {
 
 	public static final int CDR_STATUS_DETAIL_CALL_FAIL=1;
 	public static final int CDR_STATUS_DETAIL_ANSWER=2;
+	
+	public static final int CDR_END_REASON_MAIN = 1000; //主通道挂机  
+	public static final int CDR_END_REASON_SYSTEM = 1001;   //非主通道挂机  
+	public static final int CDR_END_REASON_DISCONNECT = 1002;   //被强拆  
 }
