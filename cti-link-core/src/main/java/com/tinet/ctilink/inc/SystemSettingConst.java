@@ -56,9 +56,47 @@ public class SystemSettingConst {
 
     public static final String SYSTEM_SETTING_NAME_CONTROL_API_WHITE_IP_LIST = "control_api_white_ip_list";
 
-    /** DynamoDB表名前后缀配置 */
-    public static final String SYSTEM_SETTING_NAME_DYNAMODB_TABLE_NAME_PREFIX = "dynamodb_table_name_prefix";
+    /** aws 配置项 */
+    public static final String SYSTEM_SETTING_NAME_AWS_S3_BUCKET_NAME = "aws_s3_bucket_name";
 
-    public static final String SYSTEM_SETTING_NAME_DYNAMODB_TABLE_NAME_SUFFIX = "dynamodb_table_name_suffix";
+    /** presigned url type nfs s3 */
+    public static final String SYSTEM_SETTING_NAME_PRESIGNED_URL_TYPE = "presigned_url_type";
+
+    //分钟数
+    public static final String SYSTEM_SETTING_NAME_PRESIGNED_URL_EXPIRATION_TIME = "presigned_url_expiration_time";
+
+    /** download模块的url prefix*/
+    public static final String SYSTEM_SETTING_NAME_MODULE_DOWNLOAD_URL_PREFIX = "module_download_url_prefix";
+
+
+    /** dynamodb table name */
+    public static final String SYSTEM_SETTING_NAME_CDR_IB_TABLE_NAME = "cdr_ib_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_CDR_IB_DETAIL_TABLE_NAME = "cdr_ib_detail_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_CDR_OB_AGENT_TABLE_NAME = "cdr_ob_agent_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_CDR_OB_AGENT_DETAIL_TABLE_NAME = "cdr_ob_agent_detail_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_CDR_OB_CUSTOMER_TABLE_NAME = "cdr_ob_customer_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_CDR_OB_CUSTOMER_DETAIL_TABLE_NAME = "cdr_ob_customer_detail_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_ANCHOR_EVENT_TABLE_NAME = "anchor_event_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_QUEUE_EVENT_TABLE_NAME = "queue_event_table_name";
+
+    public static final String SYSTEM_SETTING_NAME_INVESTIGATION_RECORD_TABLE_NAME = "investigation_record_table_name";
+
+    /** cdr push */
+    public static final String SYSTEM_SETTING_NAME_CDR_PUBLISH = "cdr_publish";
+
+    public static final String SYSTEM_SETTING_NAME_ANCHOR_EVENT_PUBLISH = "anchor_event_publish";
+
+    public static final String SYSTEM_SETTING_NAME_QUEUE_EVENT_PUBLISH = "queue_event_publish";
+
+    public static final String SYSTEM_SETTING_NAME_INVESTIGATION_RECORD_PUBLISH = "investigation_record_publish";
+
+    public static final String SYSTEM_SETTING_NAME_PUBLISH_REDIS = "cdr_publish_redis";
 
 }

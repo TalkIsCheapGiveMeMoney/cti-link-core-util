@@ -35,31 +35,21 @@ import org.apache.commons.lang3.StringUtils;
 public class AwsS3Service {
 
 	private AmazonS3Client awsS3Client;
-	private BasicAWSCredentials awsCredentials;
 
 	public void setAwsS3Client(AmazonS3Client awsS3Client) {
 		this.awsS3Client = awsS3Client;
 		this.awsS3Client.setRegion(Region.getRegion(Regions.CN_NORTH_1));
 	}
 
-	public void setAwsCredentials(BasicAWSCredentials awsCredentials) {
-		this.awsCredentials = awsCredentials;
-	}
-
 	/**
 	 * 解析AWS S3访问链接
 	 * 
-	 * @param bucket
-	 * @param key
+	 * @param bucket s3 bucket name
+	 * @param key key
+	 * @param expirationTime ms
 	 * @return
 	 */
-	public String getAwsS3Url(String bucket, String key) {
-		Date expiration = new Date();
-		long milliSeconds = expiration.getTime();
-		Integer minute = 2;
-		milliSeconds += 1000 * 60 * minute; // Add 2 min.
-		expiration.setTime(milliSeconds);
-
+	public String getAwsS3Url(String bucket, String key, long expirationTime) {
 		// 用 bucket 和 object 创建一个用于生成访问aws资源url的请求
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, key);
 
@@ -67,7 +57,7 @@ public class AwsS3Service {
 		generatePresignedUrlRequest.setMethod(HttpMethod.GET);
 
 		// 设置请求的url过期时间
-		generatePresignedUrlRequest.setExpiration(expiration);
+		generatePresignedUrlRequest.setExpiration(new Date(expirationTime));
 
 		String fileName = key.substring(key.lastIndexOf('/') + 1);
 		ResponseHeaderOverrides header = new ResponseHeaderOverrides();
@@ -104,20 +94,6 @@ public class AwsS3Service {
 		rs = awsS3Client.putObject(request);
 
 		return rs;
-	}
-
-	/**
-	 * 生成打包下载时的校验Token
-	 * 
-	 * @param bucket
-	 * @param keys
-	 * @return
-	 */
-	public String generateZipToken(String bucket, String... keys) {
-		String md5 = MD5Encoder.encode(
-				awsCredentials.getAWSAccessKeyId() + awsCredentials.getAWSSecretKey() + bucket + StringUtils.join(keys));
-		String base64 = Base64.getEncoder().encodeToString(md5.getBytes());
-		return base64;
 	}
 	
 	/**
